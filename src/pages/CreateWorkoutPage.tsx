@@ -20,7 +20,7 @@ function CreateWorkoutPage() {
     {
       id: 1,
       name: "PUSH UPS",
-      imageURL: "/public/exercisesImg/pushUps.jpg",
+      imageURL: "/exercisesImg/pushUps.jpg",
       targetMuscles: [
         { id: 1, muscle: { id: 1, name: "chest" }, percentage: 60 },
         { id: 2, muscle: { id: 2, name: "triceps" }, percentage: 25 },
@@ -39,7 +39,7 @@ function CreateWorkoutPage() {
     {
       id: 2,
       name: "SQUATS",
-      imageURL: "/public/exercisesImg/squats.jpg",
+      imageURL: "/exercisesImg/squats.jpg",
       targetMuscles: [
         { id: 4, muscle: { id: 4, name: "quads" }, percentage: 45 },
         { id: 5, muscle: { id: 5, name: "glutes" }, percentage: 35 },
@@ -58,7 +58,7 @@ function CreateWorkoutPage() {
     {
       id: 3,
       name: "PULL UPS",
-      imageURL: "/public/exercisesImg/pullUps.jpg",
+      imageURL: "/exercisesImg/pullUps.jpg",
       targetMuscles: [
         { id: 7, muscle: { id: 7, name: "lats" }, percentage: 50 },
         { id: 8, muscle: { id: 8, name: "biceps" }, percentage: 30 },
@@ -78,7 +78,7 @@ function CreateWorkoutPage() {
     {
       id: 4,
       name: "LUNGES",
-      imageURL: "/public/exercisesImg/lunges.jpg",
+      imageURL: "/exercisesImg/lunges.jpg",
       targetMuscles: [
         { id: 11, muscle: { id: 4, name: "quads" }, percentage: 40 },
         { id: 5, muscle: { id: 5, name: "glutes" }, percentage: 35 },
@@ -97,7 +97,7 @@ function CreateWorkoutPage() {
     {
       id: 5,
       name: "PLANKS",
-      imageURL: "/public/exercisesImg/planks.jpg",
+      imageURL: "/exercisesImg/planks.jpg",
       targetMuscles: [
         { id: 13, muscle: { id: 11, name: "core" }, percentage: 60 },
         { id: 14, muscle: { id: 3, name: "shoulders" }, percentage: 25 },
