@@ -6,6 +6,7 @@ import WorkoutExerciseBar from "@/components/workoutModal/WorkoutExerciseBar";
 import { useState } from "react";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
+import RemoveExConfirmationModal from "../workoutModal/RemoveExConfirmationModal";
 
 interface WorkoutModalProps {
   exercises: Exercise[];
@@ -40,6 +41,24 @@ function WorkoutModal({
       }))
   );
 
+  const [workoutExIdToRemove, setWorkoutExIdToRemove] = useState<number>();
+
+  const [isRemoveExConfModalOpen, setIsRemoveExConfModalOpen] = useState(false);
+
+  const handleOpenConformationModal = (workoutExerciseId: number) => {
+    setWorkoutExIdToRemove(workoutExerciseId);
+    setIsRemoveExConfModalOpen(true);
+  };
+
+  const handleOnYes = () => {
+    removeExercise(workoutExIdToRemove);
+    setIsRemoveExConfModalOpen(false);
+  };
+
+  const handleOnNo = () => {
+    setIsRemoveExConfModalOpen(false);
+  };
+
   const hasAnyInjury = workoutExercises.some((wx) =>
     hasInjuredMuscle(wx.exercise)
   );
@@ -50,12 +69,12 @@ function WorkoutModal({
     );
   };
 
-  const removeExercise = (id: number) => {
+  const removeExercise = (id?: number) => {
     // find the object in the local state
     const toRemove = workoutExercises.find((we) => we.exercise.id === id);
     if (!toRemove) return;
 
-    // notify the parent with the *original* Exercise
+    // notify the parent with the original Exercise
     onRemoveExercise(toRemove.exercise);
 
     // remove locally
@@ -125,7 +144,7 @@ function WorkoutModal({
                   onKilosChange={(newKilos) =>
                     updateExercise(we.id, { kilos: newKilos })
                   }
-                  onRemove={() => removeExercise(we.id)}
+                  onRemove={() => handleOpenConformationModal(we.id)}
                 />
               ))}
             </div>
@@ -170,6 +189,13 @@ function WorkoutModal({
         </div>
 
         {/*Remove exercise Alert Dialog */}
+        {isRemoveExConfModalOpen && (
+          <RemoveExConfirmationModal
+            isOpen={isRemoveExConfModalOpen}
+            onYes={handleOnYes}
+            onNo={handleOnNo}
+          />
+        )}
         {/*Save Workout Dialog*/}
       </DialogContent>
     </Dialog>
