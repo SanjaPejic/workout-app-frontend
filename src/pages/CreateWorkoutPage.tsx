@@ -136,6 +136,21 @@ function CreateWorkoutPage() {
   );
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
 
+  const filteredExercises = dummyExercises.filter((exercise) => {
+    const matchesSearch = exercise.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const hasTargetMuscle =
+      appliedTargetMuscles.length === 0 ||
+      appliedTargetMuscles.some((appliedMuscle) =>
+        exercise.targetMuscles.some(
+          (targetMuscle) => targetMuscle.muscle.id === appliedMuscle.id
+        )
+      );
+
+    return matchesSearch && hasTargetMuscle;
+  });
+
   //Remove or Add an Exercise
   const handleToggleExercise = (exercise: Exercise) => {
     const isAlreadyAdded = tempExercises.some((ex) => ex.id === exercise.id);
@@ -299,7 +314,7 @@ function CreateWorkoutPage() {
 
         {/*Exercises grid*/}
         <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {dummyExercises.map((exercise) => (
+          {filteredExercises.map((exercise) => (
             <ExerciseCard
               key={exercise.id}
               exercise={exercise}
