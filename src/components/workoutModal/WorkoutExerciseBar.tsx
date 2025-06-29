@@ -3,19 +3,22 @@ import { Input } from "@/components/ui/input";
 import { AlertTriangle, GripVertical, Trash2 } from "lucide-react";
 
 interface WorkoutExerciseBarProps {
-  exerciseName?: string;
+  exerciseName: string;
   hasInjuredMuscle?: boolean;
-  sets?: number;
-  reps?: number;
-  kilos?: number;
-  onSetsChange?: (newSets: number) => void;
-  onRepsChange?: (newReps: number) => void;
-  onKilosChange?: (newKilos: number) => void;
-  onRemove?: () => void;
+  sets: number;
+  reps: number;
+  kilos: number;
+  onSetsChange: (newSets: number) => void;
+  onRepsChange: (newReps: number) => void;
+  onKilosChange: (newKilos: number) => void;
+  onRemove: () => void;
+  onDragStart: () => void;
+  onDragOver: (e: React.DragEvent) => void;
+  onDrop: (e: React.DragEvent) => void;
 }
 
 const WorkoutExerciseBar = ({
-  exerciseName = "noName",
+  exerciseName,
   hasInjuredMuscle = false,
   sets,
   reps,
@@ -24,6 +27,9 @@ const WorkoutExerciseBar = ({
   onKilosChange,
   onRepsChange,
   onRemove,
+  onDragStart,
+  onDragOver,
+  onDrop,
 }: WorkoutExerciseBarProps) => {
   return (
     <div className="flex-1">
@@ -39,6 +45,9 @@ const WorkoutExerciseBar = ({
       {/*Exercise block content*/}
       <div
         draggable
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
         className={`flex justify-between items-center gap-3 bg-white hover:bg-gray-50 p-3 border-2 ${hasInjuredMuscle ? "border-red-300 rounded-t-none rounded-lg" : "rounded-lg"}   cursor-move`}
       >
         {/*Left side: grip icon + name*/}
