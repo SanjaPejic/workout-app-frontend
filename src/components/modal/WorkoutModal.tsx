@@ -6,7 +6,7 @@ import WorkoutExerciseBar from "@/components/workoutModal/WorkoutExerciseBar";
 import { useState } from "react";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
-import RemoveExConfirmationModal from "../workoutModal/RemoveExConfirmationModal";
+import ConformationModal from "./ConfirmationModal";
 
 interface WorkoutModalProps {
   exercises: Exercise[];
@@ -190,10 +190,11 @@ function WorkoutModal({
 
         {/*Remove exercise Alert Dialog */}
         {isRemoveExConfModalOpen && (
-          <RemoveExConfirmationModal
+          <ConformationModal
             isOpen={isRemoveExConfModalOpen}
             onYes={handleOnYes}
             onNo={handleOnNo}
+            title="DO YOU WANT TO REMOVE THE EXERCISE?"
           />
         )}
         {/*Save Workout Dialog*/}

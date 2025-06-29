@@ -12,7 +12,7 @@ import FilterPopup from "@/components/shared/FilterPopup";
 import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
-import WorkoutModal from "@/components/shared/WorkoutModal";
+import WorkoutModal from "@/components/modal/WorkoutModal";
 
 function CreateWorkoutPage() {
   //Dummy data

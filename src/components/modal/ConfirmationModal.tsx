@@ -8,24 +8,19 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 
-interface RemoveExConfirmationProps {
+interface ConfirmationProps {
   isOpen: boolean;
   onYes: () => void;
   onNo: () => void;
+  title: string;
 }
 
-function RemoveExConfirmationModal({
-  isOpen,
-  onYes,
-  onNo,
-}: RemoveExConfirmationProps) {
+function ConformationModal({ isOpen, onYes, onNo, title }: ConfirmationProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onNo()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-center">
-            DO YOU WANT TO REMOVE THE EXERCISE?
-          </AlertDialogTitle>
+          <AlertDialogTitle className="text-center">{title}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex justify-center gap-4">
           <AlertDialogAction
@@ -46,4 +41,4 @@ function RemoveExConfirmationModal({
   );
 }
 
-export default RemoveExConfirmationModal;
+export default ConformationModal;
