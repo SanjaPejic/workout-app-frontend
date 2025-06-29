@@ -45,6 +45,8 @@ function WorkoutModal({
 
   const [isRemoveExConfModalOpen, setIsRemoveExConfModalOpen] = useState(false);
 
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
   const handleOpenConformationModal = (workoutExerciseId: number) => {
     setWorkoutExIdToRemove(workoutExerciseId);
     setIsRemoveExConfModalOpen(true);
@@ -79,6 +81,27 @@ function WorkoutModal({
 
     // remove locally
     setWorkoutExercises((exs) => exs.filter((ex) => ex.id !== id));
+  };
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null) return;
+
+    const newOrder = [...workoutExercises];
+    const draggedItem = newOrder[draggedIndex];
+    newOrder.splice(draggedIndex, 1);
+    newOrder.splice(dropIndex, 0, draggedItem);
+
+    setWorkoutExercises(newOrder);
+    setDraggedIndex(null);
   };
 
   return (
@@ -127,7 +150,7 @@ function WorkoutModal({
             {/*Left Side: exercise list */}
             <div className="space-y-3">
               {/*For each list element - wrokout exercise card*/}
-              {workoutExercises.map((we) => (
+              {workoutExercises.map((we, index) => (
                 <WorkoutExerciseBar
                   key={we.id}
                   exerciseName={we.exercise.name}
@@ -145,6 +168,9 @@ function WorkoutModal({
                     updateExercise(we.id, { kilos: newKilos })
                   }
                   onRemove={() => handleOpenConformationModal(we.id)}
+                  onDragStart={() => handleDragStart(index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, index)}
                 />
               ))}
             </div>
