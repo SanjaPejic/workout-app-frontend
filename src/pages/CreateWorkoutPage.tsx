@@ -244,8 +244,8 @@ function CreateWorkoutPage() {
                 </div>
               </PopoverTrigger>
               <FilterPopup
-                title="Filter Exercises"
-                subtitle="Select muscles to target"
+                title="Select Target Muscles"
+                subtitle="Mark muscles to target"
                 selectedItems={tempTargetMuscles}
                 onItemsChange={setTempTargetMuscles}
                 onApply={applyTargetFilters}
