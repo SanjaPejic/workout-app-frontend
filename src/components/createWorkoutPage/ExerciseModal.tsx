@@ -11,7 +11,7 @@ interface ExerciseModalProps {
 function ExerciseModal({ exercise, onClose }: ExerciseModalProps) {
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className=" [&>button]:hidden p-0 !max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="[&>button]:hidden p-0 !max-w-5xl max-h-[90vh] overflow-y-auto">
         <div className="relative bg-white rounded-lg">
           {/*Close Button*/}
           <Button
@@ -54,7 +54,7 @@ function ExerciseModal({ exercise, onClose }: ExerciseModalProps) {
                   How to do it
                 </h3>
                 <div className="space-y-2">
-                  {exercise.howTosteps.map((howToStep, index) => (
+                  {exercise.howToSteps.map((howToStep, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <div className="flex flex-shrink-0 justify-center items-center bg-cyan-600 mt-0.5 rounded-full w-6 h-6 font-semibold text-white text-sm">
                         {index + 1}

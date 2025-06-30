@@ -6,6 +6,6 @@ export interface Exercise {
   imageURL: string;
   targetMuscles: TargetMuscle[];
   description: string;
-  howTosteps: string[];
+  howToSteps: string[];
   videoURL: string;
 }
