@@ -137,6 +137,7 @@ function CreateWorkoutPage() {
   );
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
 
+  // send get api request to backend
   useEffect(() => {
     fetch("http://localhost:8080/api/exercises")
       .then((response) => {
