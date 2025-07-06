@@ -4,6 +4,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import AppLoader from "@/components/shared/AppLoader";
 import { AlertTriangle, Search, SlidersHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { getExercises } from "@/api/client-service";
 
 import type { Exercise } from "@/types/Exercise";
 import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
@@ -15,6 +16,7 @@ import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
 import WorkoutModal from "@/components/modal/WorkoutModal";
 import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/constants/enums/query-keys.enum";
 
 function CreateWorkoutPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,11 +43,8 @@ function CreateWorkoutPage() {
   const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
     Exercise[]
   >({
-    queryKey: ["X"],
-    queryFn: () =>
-      fetch("http://localhost:8080/api/exercises").then((response) =>
-        response.json()
-      ),
+    queryKey: [QueryKeys.EXERCISES],
+    queryFn: getExercises,
   });
 
   const filteredExercises = exercisesData?.filter((exercise) => {
