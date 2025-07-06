@@ -1,5 +1,5 @@
 import type { Exercise } from "@/types/Exercise";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { AlertTriangle, X } from "lucide-react";
 import WorkoutExerciseBar from "@/components/workoutModal/WorkoutExerciseBar";
@@ -119,9 +119,11 @@ function WorkoutModal({
           </Button>
           {/*Title + injury warning + start button*/}
           <div className="p-6 pb-4">
-            <h2 className="font-bold text-gray-900 text-2xl text-center">
-              Custom Workout ({workoutExercises.length})
-            </h2>
+            <DialogTitle asChild>
+              <h2 className="font-bold text-gray-900 text-2xl text-center">
+                Custom Workout ({workoutExercises.length})
+              </h2>
+            </DialogTitle>
 
             {/*Compact Injury Warning*/}
             {hasAnyInjury && (
