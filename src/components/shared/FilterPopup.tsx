@@ -6,25 +6,10 @@ import { Search } from "lucide-react";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-
-//Dummy Data
-// const dummyAllMuscles: Muscle[] = [
-//   { id: 1, name: "chest" },
-//   { id: 2, name: "triceps" },
-//   { id: 3, name: "shoulders" },
-//   { id: 4, name: "quads" },
-//   { id: 5, name: "glutes" },
-//   { id: 6, name: "hamstrings" },
-//   { id: 7, name: "lats" },
-//   { id: 8, name: "biceps" },
-//   { id: 9, name: "rhomboids" },
-//   { id: 10, name: "calves" },
-//   { id: 11, name: "core" },
-//   { id: 12, name: "back" },
-//   { id: 13, name: "trapezius" },
-// ];
-
-// const allMuscles = dummyAllMuscles;
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/api/constants/query-keys";
+import { getMuscles } from "@/api/client-service";
+import AppLoader from "./AppLoader";
 
 interface FilterPopupProps {
   title: string;
@@ -45,28 +30,35 @@ function FilterPopup({
   onClear,
   variant = "default",
 }: FilterPopupProps) {
-  const [allMuscles, setAllMuscles] = useState<Muscle[]>([]);
+  //const [musclesData, setMusclesData] = useState<Muscle[]>([]);
+
+  const { data: musclesData, isLoading: isMusclesDataLoading } = useQuery<
+    Muscle[]
+  >({
+    queryKey: [QueryKeys.MUSCLES],
+    queryFn: getMuscles,
+  });
 
   // send get api request to backend
-  useEffect(() => {
-    fetch("http://localhost:8080/api/muscles")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setAllMuscles(data);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch muscles:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:8080/api/muscles")
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setMusclesData(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Failed to fetch muscles:", error);
+  //     });
+  // }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredMuscles = allMuscles.filter((muscle) =>
+  const filteredMuscles = musclesData?.filter((muscle) =>
     muscle.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -139,23 +131,27 @@ function FilterPopup({
 
         {/*Muscle List*/}
         <div className="gap-2 grid grid-cols-2 max-h-64 overflow-y-auto">
-          {filteredMuscles.map((muscle) => (
-            <div key={muscle.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={`muscle-${muscle.id}`}
-                checked={selectedItems.some((m) => m.id === muscle.id)}
-                onCheckedChange={(checked) =>
-                  handleItemChange(muscle, checked as boolean)
-                }
-              />
-              <Label
-                htmlFor={`muscle-${muscle.id}`}
-                className="text-sm capitalize cursor-pointer"
-              >
-                {muscle.name}
-              </Label>
-            </div>
-          ))}
+          {isMusclesDataLoading ? (
+            <AppLoader />
+          ) : (
+            filteredMuscles?.map((muscle) => (
+              <div key={muscle.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`muscle-${muscle.id}`}
+                  checked={selectedItems.some((m) => m.id === muscle.id)}
+                  onCheckedChange={(checked) =>
+                    handleItemChange(muscle, checked as boolean)
+                  }
+                />
+                <Label
+                  htmlFor={`muscle-${muscle.id}`}
+                  className="text-sm capitalize cursor-pointer"
+                >
+                  {muscle.name}
+                </Label>
+              </div>
+            ))
+          )}
         </div>
 
         <Button

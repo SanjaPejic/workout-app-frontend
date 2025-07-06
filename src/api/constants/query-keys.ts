@@ -1,3 +1,5 @@
 export const QueryKeys = {
-  EXERCISES: "exercises"
+  EXERCISES: "exercises",
+  MUSCLES: "muscles"
 }
+

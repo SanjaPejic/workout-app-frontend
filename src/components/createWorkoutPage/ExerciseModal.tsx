@@ -1,5 +1,5 @@
 import type { Exercise } from "@/types/Exercise";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 
@@ -24,9 +24,11 @@ function ExerciseModal({ exercise, onClose }: ExerciseModalProps) {
           </Button>
           {/*Title*/}
           <div className="p-6 pb-4">
-            <h2 className="font-bold text-gray-900 text-2xl text-center">
-              {exercise.name}
-            </h2>
+            <DialogTitle asChild>
+              <h2 className="font-bold text-gray-900 text-2xl text-center">
+                {exercise.name}
+              </h2>
+            </DialogTitle>
           </div>
           {/*Exercise Details*/}
           <div className="gap-6 grid grid-cols-1 lg:grid-cols-2 p-6 pt-0">
