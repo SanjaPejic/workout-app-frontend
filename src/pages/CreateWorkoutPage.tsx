@@ -16,7 +16,7 @@ import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
 import WorkoutModal from "@/components/modal/WorkoutModal";
 import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/constants/enums/query-keys.enum";
+import { QueryKeys } from "@/api/constants/query-keys";
 
 function CreateWorkoutPage() {
   const [searchTerm, setSearchTerm] = useState("");
