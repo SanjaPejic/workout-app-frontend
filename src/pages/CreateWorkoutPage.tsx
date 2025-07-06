@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import AppLoader from "@/components/shared/AppLoader";
 import { AlertTriangle, Search, SlidersHorizontal, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { Exercise } from "@/types/Exercise";
 import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
@@ -13,109 +14,9 @@ import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
 import WorkoutModal from "@/components/modal/WorkoutModal";
+import { useQuery } from "@tanstack/react-query";
 
 function CreateWorkoutPage() {
-  //Dummy data
-  // const dummyExercises: Exercise[] = [
-  //   {
-  //     id: 1,
-  //     name: "PUSH UPS",
-  //     imageURL: "/exercisesImg/pushUps.jpg",
-  //     targetMuscles: [
-  //       { id: 1, muscle: { id: 1, name: "chest" }, percentage: 60 },
-  //       { id: 2, muscle: { id: 2, name: "triceps" }, percentage: 25 },
-  //       { id: 3, muscle: { id: 3, name: "shoulders" }, percentage: 15 },
-  //     ],
-  //     description:
-  //       "A classic bodyweight exercise that targets the chest, triceps, and shoulders. Great for building upper body strength and endurance.",
-  //     howToSteps: [
-  //       "Start in a plank position with hands slightly wider than shoulder-width apart",
-  //       "Lower your body until your chest nearly touches the floor",
-  //       "Push back up to the starting position, keeping your core engaged",
-  //     ],
-  //     videoURL:
-  //       "https://v.ftcdn.net/02/35/30/23/700_F_235302356_yqm9LMxWwVHZjdDRbqVVHa8czTIhQa5F_ST.mp4",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "SQUATS",
-  //     imageURL: "/exercisesImg/squats.jpg",
-  //     targetMuscles: [
-  //       { id: 4, muscle: { id: 4, name: "quads" }, percentage: 45 },
-  //       { id: 5, muscle: { id: 5, name: "glutes" }, percentage: 35 },
-  //       { id: 6, muscle: { id: 6, name: "hamstrings" }, percentage: 20 },
-  //     ],
-  //     description:
-  //       "A fundamental lower body exercise that builds strength in the legs and glutes while improving mobility.",
-  //     howToSteps: [
-  //       "Stand with feet shoulder-width apart, toes slightly turned out",
-  //       "Lower your body by bending at the hips and knees",
-  //       "Push through your heels to return to the starting position",
-  //     ],
-  //     videoURL:
-  //       "https://media.istockphoto.com/id/2161109939/video/focused-athlete-performing-heavy-squats-in-modern-gym-setting.mp4?s=mp4-640x640-is&k=20&c=UcG1tfu4lKpt0fuKOWhIiZOWjHFgztw1OHIITcYttV0=",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "PULL UPS",
-  //     imageURL: "/exercisesImg/pullUps.jpg",
-  //     targetMuscles: [
-  //       { id: 7, muscle: { id: 7, name: "lats" }, percentage: 50 },
-  //       { id: 8, muscle: { id: 8, name: "biceps" }, percentage: 30 },
-  //       { id: 9, muscle: { id: 9, name: "rhomboids" }, percentage: 20 },
-  //       { id: 10, muscle: { id: 13, name: "trapezius" }, percentage: 20 },
-  //     ],
-  //     description:
-  //       "An excellent upper body pulling exercise that develops back strength and improves grip strength.",
-  //     howToSteps: [
-  //       "Hang from a pull-up bar with hands slightly wider than shoulder-width",
-  //       "Pull your body up until your chin clears the bar",
-  //       "Lower yourself back down with control",
-  //     ],
-  //     videoURL:
-  //       "https://media.istockphoto.com/id/615680136/video/young-muscular-athlete-doing-pull-up-exercises.mp4?s=mp4-640x640-is&k=20&c=ceMa7-A3Fe5R8CmJ6g9kRTMWh43-YQDXL_eONcBocnU=",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "LUNGES",
-  //     imageURL: "/exercisesImg/lunges.jpg",
-  //     targetMuscles: [
-  //       { id: 11, muscle: { id: 4, name: "quads" }, percentage: 40 },
-  //       { id: 5, muscle: { id: 5, name: "glutes" }, percentage: 35 },
-  //       { id: 12, muscle: { id: 10, name: "calves" }, percentage: 25 },
-  //     ],
-  //     description:
-  //       "A unilateral leg exercise that improves balance, coordination, and lower body strength.",
-  //     howToSteps: [
-  //       "Step forward with one leg, lowering your hips until both knees are bent at 90 degrees",
-  //       "Make sure your front knee is directly above your ankle",
-  //       "Push back to the starting position and repeat with the other leg",
-  //     ],
-  //     videoURL:
-  //       "https://media.istockphoto.com/id/1327346084/video/focused-athlete-uses-kettlebells-during-workout.mp4?s=mp4-640x640-is&k=20&c=sYOFEfNFs-PAh8lE4niCi7b2VZWJXa-GVTZYjWRhLQY=",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "PLANKS",
-  //     imageURL: "/exercisesImg/planks.jpg",
-  //     targetMuscles: [
-  //       { id: 13, muscle: { id: 11, name: "core" }, percentage: 60 },
-  //       { id: 14, muscle: { id: 3, name: "shoulders" }, percentage: 25 },
-  //       { id: 15, muscle: { id: 5, name: "glutes" }, percentage: 15 },
-  //     ],
-  //     description:
-  //       "An isometric core exercise that builds stability and endurance in the entire core region.",
-  //     howToSteps: [
-  //       "Start in a push-up position but rest on your forearms",
-  //       "Keep your body in a straight line from head to heels",
-  //       "Hold this position while breathing normally",
-  //     ],
-  //     videoURL:
-  //       "https://media.istockphoto.com/id/1126180425/video/girl-doing-exercise-plank-stands-on-the-mat-in-the-middle-of-the-fitness-room-4k-slow-mo.mp4?s=mp4-640x640-is&k=20&c=0kW11-5SuyZ5wDT8V9_T344xDvxS4YmS3eKGlXZFhjs=",
-  //   },
-  // ];
-
-  const [dummyExercises, setDummyExercises] = useState<Exercise[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isInjuriesOpen, setIsInjuriesOpen] = useState(false);
@@ -137,25 +38,17 @@ function CreateWorkoutPage() {
   );
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
 
-  // send get api request to backend
-  useEffect(() => {
-    fetch("http://localhost:8080/api/exercises")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Data received:", data);
-        setDummyExercises(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+  const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
+    Exercise[]
+  >({
+    queryKey: ["X"],
+    queryFn: () =>
+      fetch("http://localhost:8080/api/exercises").then((response) =>
+        response.json()
+      ),
+  });
 
-  const filteredExercises = dummyExercises.filter((exercise) => {
+  const filteredExercises = exercisesData?.filter((exercise) => {
     const matchesSearch = exercise.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -333,20 +226,25 @@ function CreateWorkoutPage() {
 
         {/*Exercises grid*/}
         <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {filteredExercises.map((exercise) => (
-            <ExerciseCard
-              key={exercise.id}
-              exercise={exercise}
-              onToggle={() => handleToggleExercise(exercise)}
-              isAdded={
-                tempExercises.some((ex) => ex.id === exercise.id) ?? false
-              }
-              injuredMuscles={appliedInjuredMuscles}
-              onExerciseClick={() => setSelectedExercise(exercise)}
-            />
-          ))}
+          {isExercisesDataLoading ? (
+            <AppLoader />
+          ) : (
+            filteredExercises?.map((exercise) => (
+              <ExerciseCard
+                key={exercise.id}
+                exercise={exercise}
+                onToggle={() => handleToggleExercise(exercise)}
+                isAdded={
+                  tempExercises.some((ex) => ex.id === exercise.id) ?? false
+                }
+                injuredMuscles={appliedInjuredMuscles}
+                onExerciseClick={() => setSelectedExercise(exercise)}
+              />
+            ))
+          )}
         </div>
       </div>
+
       {/*Toast Notification*/}
       <Toast
         visible={toast.visible}
