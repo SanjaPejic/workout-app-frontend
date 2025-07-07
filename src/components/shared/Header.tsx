@@ -1,9 +1,11 @@
 import { Button } from "../ui/button";
 import { BookmarkIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import UserMenu from "./UserMenu";
 
 function Header() {
   const navigate = useNavigate();
+  const logout = () => {};
   return (
     <header className="bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg px-6 py-4">
       <div className="flex justify-between items-center mx-auto">
@@ -28,7 +30,7 @@ function Header() {
 
         {/*Right side: the three buttons*/}
         <div className="flex gap-3">
-          <Button variant="header" onClick={() => navigate("/")}>
+          <Button variant="header" onClick={() => navigate("/create")}>
             Create Workout
           </Button>
           <Button variant="header" onClick={() => navigate("/generate")}>
@@ -38,6 +40,8 @@ function Header() {
             <BookmarkIcon className="w-5 h-5" />
           </Button>
           {/* <UserMenu username={currentUser?.username || ""} onLogout={logout} /> */}
+          {/* temp code: */}
+          <UserMenu username="tempTest" onLogout={logout} />
         </div>
       </div>
     </header>
