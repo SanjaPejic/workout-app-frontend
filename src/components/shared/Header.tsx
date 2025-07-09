@@ -5,7 +5,7 @@ import UserMenu from "./UserMenu";
 
 function Header() {
   const navigate = useNavigate();
-  const logout = () => {};
+
   return (
     <header className="bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg px-6 py-4">
       <div className="flex justify-between items-center mx-auto">
@@ -29,7 +29,7 @@ function Header() {
         </div>
 
         {/*Right side: the three buttons*/}
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
           <Button variant="header" onClick={() => navigate("/create")}>
             Create Workout
           </Button>
@@ -41,7 +41,7 @@ function Header() {
           </Button>
           {/* <UserMenu username={currentUser?.username || ""} onLogout={logout} /> */}
           {/* temp code: */}
-          <UserMenu username="tempTest" onLogout={logout} />
+          <UserMenu />
         </div>
       </div>
     </header>

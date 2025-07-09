@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "@/constants/UserStore";
 
-interface UserMenuProps {
-  username: string;
-  onLogout: () => void;
-}
-
-function UserMenu({ username, onLogout }: UserMenuProps) {
+function UserMenu() {
+  const navigate = useNavigate();
+  const username = useUserStore((state) => state.username);
+  const clearUserStore = useUserStore((state) => state.clearUserStore);
   // Get initials from username
   const getInitials = (name: string) => {
     return name
@@ -26,6 +26,10 @@ function UserMenu({ username, onLogout }: UserMenuProps) {
       .slice(0, 2);
   };
 
+  const onLogout = () => {
+    clearUserStore;
+    navigate("/");
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
