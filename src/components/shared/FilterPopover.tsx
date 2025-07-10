@@ -11,7 +11,7 @@ import { QueryKeys } from "@/api/constants/query-keys";
 import { getMuscles } from "@/api/client-service";
 import AppLoader from "./AppLoader";
 
-interface FilterPopupProps {
+interface FilterPopoverProps {
   title: string;
   subtitle?: string;
   selectedItems: Muscle[];
@@ -21,7 +21,7 @@ interface FilterPopupProps {
   variant?: "default" | "warning";
 }
 
-function FilterPopup({
+function FilterPopover({
   title,
   subtitle,
   selectedItems,
@@ -29,7 +29,7 @@ function FilterPopup({
   onApply,
   onClear,
   variant = "default",
-}: FilterPopupProps) {
+}: FilterPopoverProps) {
   //const [musclesData, setMusclesData] = useState<Muscle[]>([]);
 
   const { data: musclesData, isLoading: isMusclesDataLoading } = useQuery<
@@ -165,4 +165,4 @@ function FilterPopup({
   );
 }
 
-export default FilterPopup;
+export default FilterPopover;

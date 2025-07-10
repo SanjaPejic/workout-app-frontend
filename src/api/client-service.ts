@@ -1,12 +1,26 @@
-import {exercisesEndpoints, musclesEndpoints} from "./constants/endpoints";
+import {exercisesEndpoints, musclesEndpoints, usersEndpoint} from "./constants/endpoints";
 import { apiClient } from "./api-client";
 
 export const getExercises = async () => {
-  const response = await apiClient.get(exercisesEndpoints.getAll);
+  const endpoint = exercisesEndpoints.getAll;
+  const response = await apiClient.get(endpoint);
   return response.data;
 };
 
 export const getMuscles = async () => {
-  const response = await apiClient.get(musclesEndpoints.getAll);
+  const endpoint = musclesEndpoints.getAll
+  const response = await apiClient.get(endpoint);
+  return response.data;
+}
+
+export const getUser = async (username: string) => {
+  const endpoint = usersEndpoint.getOne.replace(":username", username );
+  const response = await apiClient.get(endpoint);
+  return response.data;
+}
+
+export const createUser = async (username: string) => {
+  const endpoint = usersEndpoint.create;
+  const response = await apiClient.post(endpoint, {username});
   return response.data;
 }

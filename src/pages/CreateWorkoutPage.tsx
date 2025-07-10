@@ -10,7 +10,7 @@ import type { Exercise } from "@/types/Exercise";
 import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
 
 import Toast from "@/components/shared/Toast";
-import FilterPopup from "@/components/shared/FilterPopup";
+import FilterPopover from "@/components/shared/FilterPopover";
 import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
@@ -169,7 +169,7 @@ function CreateWorkoutPage() {
                   />
                 </div>
               </PopoverTrigger>
-              <FilterPopup
+              <FilterPopover
                 title="Select Target Muscles"
                 subtitle="Mark muscles to target"
                 selectedItems={tempTargetMuscles}
@@ -192,7 +192,7 @@ function CreateWorkoutPage() {
                   />
                 </div>
               </PopoverTrigger>
-              <FilterPopup
+              <FilterPopover
                 title="Select Injuries"
                 subtitle="Mark injured muscles"
                 selectedItems={tempInjuredMuscles}

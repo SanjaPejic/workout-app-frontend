@@ -5,3 +5,10 @@ export const exercisesEndpoints = {
 export const musclesEndpoints = {
     getAll: "/muscles"
 }
+
+export const usersEndpoint = {
+    getOne: "/users/:username",
+    create: "/users"
+}
+
+
