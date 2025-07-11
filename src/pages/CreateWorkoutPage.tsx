@@ -5,18 +5,19 @@ import AppLoader from "@/components/shared/AppLoader";
 import { AlertTriangle, Search, SlidersHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { getExercises } from "@/api/client-service";
-
 import type { Exercise } from "@/types/Exercise";
 import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
-
 import Toast from "@/components/shared/Toast";
 import FilterPopover from "@/components/shared/FilterPopover";
 import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
 import WorkoutModal from "@/components/modal/WorkoutModal";
-import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/api/constants/query-keys";
+import { useUserStore } from "@/constants/UserStore";
+import { getUserInjuries, updateUserInjuries } from "@/api/client-service";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 function CreateWorkoutPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,12 +40,48 @@ function CreateWorkoutPage() {
     null
   );
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
+  const userId = useUserStore((state) => state.id);
 
   const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
     Exercise[]
   >({
     queryKey: [QueryKeys.EXERCISES],
     queryFn: getExercises,
+  });
+
+  const { data: injuriesData } = useQuery<
+    { id: number; muscle: Muscle; user: { id: number; username: string } }[]
+  >({
+    queryKey: [QueryKeys.INJURIES, userId],
+    queryFn: () => getUserInjuries(userId!),
+    enabled: !!userId,
+  });
+
+  useEffect(() => {
+    if (injuriesData) {
+      setAppliedInjuredMuscles(injuriesData.map((injury) => injury.muscle));
+    }
+  }, [injuriesData]);
+
+  const queryClient = useQueryClient();
+
+  const updateInjuriesMutation = useMutation({
+    mutationFn: (injuries: Muscle[]) =>
+      updateUserInjuries(
+        userId!,
+        injuries.map((muscle) => ({ muscle }))
+      ),
+    onSuccess: (response) => {
+      setAppliedInjuredMuscles(response.map((injury: any) => injury.muscle));
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.INJURIES, userId] });
+      setToast({ visible: true, message: "Applyed injuries" });
+    },
+    onError: (error: any) => {
+      setToast({
+        visible: true,
+        message: error?.response?.data || "Failed to apply injuries",
+      });
+    },
   });
 
   const filteredExercises = exercisesData?.filter((exercise) => {
@@ -128,6 +165,7 @@ function CreateWorkoutPage() {
   const applyInjuries = () => {
     setAppliedInjuredMuscles(tempInjuredMuscles);
     setIsInjuriesOpen(false);
+    updateInjuriesMutation.mutate(tempInjuredMuscles);
   };
 
   const clearInjuries = () => {

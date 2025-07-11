@@ -1,3 +1,5 @@
+import { updateUserInjuries } from "../client-service"
+
 export const exercisesEndpoints = {
     getAll: "/exercises"
 }
@@ -11,4 +13,7 @@ export const usersEndpoint = {
     create: "/users"
 }
 
+export const injuriesEndpoint = {
+    allByUserId: "/injuries/user/:userId"
+}
 
