@@ -76,7 +76,7 @@ function WorkoutModal({
     const toRemove = workoutExercises.find((we) => we.exercise.id === id);
     if (!toRemove) return;
 
-    // notify the parent with the original Exercise
+    // notify the parent (CreateWorkoutPage) with the original Exercise
     onRemoveExercise(toRemove.exercise);
 
     // remove locally

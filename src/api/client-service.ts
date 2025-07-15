@@ -1,4 +1,4 @@
-import {exercisesEndpoints, injuriesEndpoint, musclesEndpoints, usersEndpoint} from "./constants/endpoints";
+import {exercisesEndpoints, injuriesEndpoint, musclesEndpoints, usersEndpoint, workoutsEndpoint} from "./constants/endpoints";
 import { apiClient } from "./api-client";
 
 export const getExercises = async () => {
@@ -36,3 +36,15 @@ export const updateUserInjuries = async (userId: number, injuries: { muscle: { i
   const response = await apiClient.put(endpoint, injuries);
   return response.data;
 };
+
+export const getWorkouts = async (userId: number) => {
+  const endpoint = workoutsEndpoint.allByUserId.replace(":userId", `${userId}`);
+  const response = await apiClient.get(endpoint);
+  return response.data;
+}
+
+export const deleteWorkout = async (workoutId: number) => {
+  const endpoint = workoutsEndpoint.deleteOne.replace(":workoutId", `${workoutId}`);
+  const response = await apiClient.delete(endpoint);
+  return response.data;
+}
