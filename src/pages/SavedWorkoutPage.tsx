@@ -16,7 +16,7 @@ function SavedWorkoutPage() {
   //     updateInjuriesMutation.mutate(tempInjuredMuscles);
   //   };
 
-  const [workoutWoIdToDelete, setWorkoutWoIdToDelete] = useState<number>();
+  const [workoutIdToDelete, setWorkoutIdToDelete] = useState<number>();
   const [isDeleteWoConfModalOpen, setIsDeleteWoConfModalOpen] = useState(false);
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const queryClient = useQueryClient();
@@ -31,7 +31,7 @@ function SavedWorkoutPage() {
   });
 
   const handleOpenConformationModal = (workoutId: number) => {
-    setWorkoutWoIdToDelete(workoutId);
+    setWorkoutIdToDelete(workoutId);
     setIsDeleteWoConfModalOpen(true);
   };
 
@@ -56,7 +56,7 @@ function SavedWorkoutPage() {
   };
 
   const handleOnYes = () => {
-    handleDeleteWorkout(workoutWoIdToDelete);
+    handleDeleteWorkout(workoutIdToDelete);
     setIsDeleteWoConfModalOpen(false);
   };
 
@@ -140,6 +140,7 @@ function SavedWorkoutPage() {
         />
       )}
 
+      {/*Workout Modal*/}
       {/* {showWorkoutModal && <WorkoutModal />} */}
     </div>
   );

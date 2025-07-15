@@ -7,6 +7,10 @@ import { useState } from "react";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
 import ConformationModal from "./ConfirmationModal";
+import SaveWorkoutModal from "./SaveWorkoutModal";
+import { useMutation } from "@tanstack/react-query";
+import { createWorkout } from "@/api/client-service";
+import { useUserStore } from "@/constants/UserStore";
 
 interface WorkoutModalProps {
   exercises: Exercise[];
@@ -40,6 +44,8 @@ function WorkoutModal({
         kilos: 0,
       }))
   );
+
+  const [isSaveWoModalOpen, setIsSaveWoModalOpen] = useState(false);
 
   const [workoutExIdToRemove, setWorkoutExIdToRemove] = useState<number>();
 
@@ -103,6 +109,29 @@ function WorkoutModal({
     setWorkoutExercises(newOrder);
     setDraggedIndex(null);
   };
+
+  const userId = useUserStore((state) => state.id);
+
+  const saveWorkoutMutation = useMutation({
+    mutationFn: ({
+      userId,
+      name,
+      workoutExercises,
+    }: {
+      userId: number;
+      name: string;
+      workoutExercises: WorkoutExercise[];
+    }) => createWorkout(userId, name, workoutExercises),
+    onSuccess: () => {
+      // Invalidate the workouts query to refresh the list
+      // queryClient.invalidateQueries({
+      //   queryKey: [QueryKeys.WORKOUTS, userId],
+      // });
+    },
+    onError: (error: any) => {
+      alert(error?.response?.data || "Failed to save workout");
+    },
+  });
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -208,7 +237,10 @@ function WorkoutModal({
                 >
                   Download PDF
                 </Button>
-                <Button className="flex-1 bg-slate-600 hover:bg-slate-700 py-2 rounded-lg text-white">
+                <Button
+                  onClick={() => setIsSaveWoModalOpen(true)}
+                  className="flex-1 bg-slate-600 hover:bg-slate-700 py-2 rounded-lg text-white"
+                >
                   SAVE
                 </Button>
               </div>
@@ -225,7 +257,22 @@ function WorkoutModal({
             title="DO YOU WANT TO REMOVE THE EXERCISE?"
           />
         )}
+
         {/*Save Workout Dialog*/}
+        {isSaveWoModalOpen && (
+          <SaveWorkoutModal
+            isOpen={isSaveWoModalOpen}
+            onOpenChange={setIsSaveWoModalOpen}
+            onSave={(workoutName) => {
+              if (!userId) return;
+              saveWorkoutMutation.mutate({
+                userId,
+                name: workoutName,
+                workoutExercises,
+              });
+            }}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
