@@ -39,8 +39,6 @@ function Header() {
           <Button variant="header" onClick={() => navigate("/saved")}>
             <BookmarkIcon className="w-5 h-5" />
           </Button>
-          {/* <UserMenu username={currentUser?.username || ""} onLogout={logout} /> */}
-          {/* temp code: */}
           <UserMenu />
         </div>
       </div>
