@@ -10,19 +10,19 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
-interface SaveWorkoutModalProps {
+interface SaveWoConformationModalProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onSave: (workoutName: string) => void;
   onCancel?: () => void;
 }
 
-function SaveWorkoutModal({
+function SaveWoConformationModal({
   isOpen,
   onOpenChange,
   onSave,
   onCancel,
-}: SaveWorkoutModalProps) {
+}: SaveWoConformationModalProps) {
   const [workoutName, setWorkoutName] = useState("");
 
   const handleSave = () => {
@@ -79,4 +79,4 @@ function SaveWorkoutModal({
   );
 }
 
-export default SaveWorkoutModal;
+export default SaveWoConformationModal;

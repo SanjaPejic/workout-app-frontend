@@ -18,5 +18,6 @@ export const injuriesEndpoint = {
 export const workoutsEndpoint = {
     allByUserId: "/workouts/user/:userId",
     deleteOne: "/workouts/:workoutId",
-    create: "/workouts"
+    create: "/workouts",
+    update: "/workouts/:workoutId"
 }

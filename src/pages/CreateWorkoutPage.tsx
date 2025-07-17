@@ -12,12 +12,12 @@ import FilterPopover from "@/components/shared/FilterPopover";
 import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
-import WorkoutModal from "@/components/modal/WorkoutModal";
 import { QueryKeys } from "@/api/constants/query-keys";
 import { useUserStore } from "@/constants/UserStore";
 import { getUserInjuries, updateUserInjuries } from "@/api/client-service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import CreateWorkoutModal from "@/components/modal/CreateWorkoutModal";
 
 function CreateWorkoutPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -296,8 +296,9 @@ function CreateWorkoutPage() {
         />
       )}
 
+      {/*Workout Modal for Creating (saving) a New Workout*/}
       {showWorkoutModal && (
-        <WorkoutModal
+        <CreateWorkoutModal
           exercises={tempExercises}
           onClose={() => setShowWorkoutModal(false)}
           onRemoveExercise={(exercise: Exercise) =>

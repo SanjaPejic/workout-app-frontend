@@ -1,9 +1,16 @@
-import { deleteWorkout, getWorkouts } from "@/api/client-service";
+import {
+  deleteWorkout,
+  getWorkouts,
+  updateWorkout,
+} from "@/api/client-service";
 import { QueryKeys } from "@/api/constants/query-keys";
 import ConformationModal from "@/components/modal/ConfirmationModal";
+import EditSavedWoModal from "@/components/modal/EditSavedWoModal";
+import WorkoutModal from "@/components/modal/EditSavedWoModal";
 import SavedWorkoutCard from "@/components/savedWorkoutPage/SavedWorkoutCard";
 import AppLoader from "@/components/shared/AppLoader";
 import { useUserStore } from "@/constants/UserStore";
+import type { Exercise } from "@/types/Exercise";
 import type { Workout } from "@/types/Workout";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -16,9 +23,9 @@ function SavedWorkoutPage() {
   //     updateInjuriesMutation.mutate(tempInjuredMuscles);
   //   };
 
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [workoutIdToDelete, setWorkoutIdToDelete] = useState<number>();
   const [isDeleteWoConfModalOpen, setIsDeleteWoConfModalOpen] = useState(false);
-  const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const queryClient = useQueryClient();
   const userId = useUserStore((state) => state.id);
 
@@ -122,7 +129,7 @@ function SavedWorkoutPage() {
                   onDelete={(workoutId: number) =>
                     handleOpenConformationModal(workoutId)
                   }
-                  onOpen={() => setShowWorkoutModal(true)}
+                  onOpen={() => setSelectedWorkout(workout)}
                 />
               ))}
             </div>
@@ -140,8 +147,14 @@ function SavedWorkoutPage() {
         />
       )}
 
-      {/*Workout Modal*/}
-      {/* {showWorkoutModal && <WorkoutModal />} */}
+      {/*Workout Modal for Editing (updating) a Saved Workout*/}
+      {selectedWorkout && (
+        <EditSavedWoModal
+          workout={selectedWorkout}
+          onClose={() => setSelectedWorkout(null)}
+          injuredMuscles={[]} // should pass appliedInjuredMuscles
+        />
+      )}
     </div>
   );
 }
