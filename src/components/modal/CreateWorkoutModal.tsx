@@ -13,6 +13,7 @@ import { createWorkout } from "@/api/client-service";
 import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
+import Toast from "../shared/Toast";
 
 interface CreateWorkoutModalProps {
   exercises: Exercise[];
@@ -54,6 +55,11 @@ function CreateWorkoutModal({
   const [isRemoveExConfModalOpen, setIsRemoveExConfModalOpen] = useState(false);
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const [toast, setToast] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: "",
+  });
 
   const queryClient = useQueryClient();
 
@@ -123,6 +129,10 @@ function CreateWorkoutModal({
       // Invalidate the workouts query to refresh the list of saved workouts
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.WORKOUTS, userId],
+      });
+      setToast({
+        visible: true,
+        message: "Saved Workout",
       });
     },
     onError: (error: any) => {
@@ -277,6 +287,12 @@ function CreateWorkoutModal({
             onSave={handleConfOnSave}
           />
         )}
+        {/*Toast Notification*/}
+        <Toast
+          visible={toast.visible}
+          message={toast.message}
+          onClose={() => setToast({ visible: false, message: "" })}
+        />
       </DialogContent>
     </Dialog>
   );

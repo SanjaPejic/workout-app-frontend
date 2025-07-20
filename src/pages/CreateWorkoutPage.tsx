@@ -76,20 +76,15 @@ function CreateWorkoutPage() {
       setTempExercises((prev) => prev.filter((ex) => ex.id !== exercise.id));
       setToast({
         visible: true,
-        message: `REMOVED ${exercise.name}`,
+        message: `Removed ${exercise.name}`,
       });
     } else {
       setTempExercises((prev) => [...prev, exercise]);
       setToast({
         visible: true,
-        message: `ADDED ${exercise.name}`,
+        message: `Added ${exercise.name}`,
       });
     }
-
-    // Hide toast after 2 seconds
-    setTimeout(() => {
-      setToast({ visible: false, message: "" });
-    }, 2000);
   };
 
   //Clear temp workout
@@ -101,10 +96,6 @@ function CreateWorkoutPage() {
       visible: true,
       message: "Workout cleared",
     });
-
-    setTimeout(() => {
-      setToast({ visible: false, message: "" });
-    }, 2000);
   };
 
   // Filter handlers (target muscles)

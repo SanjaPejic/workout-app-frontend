@@ -1,13 +1,23 @@
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
 
 interface ToastProps {
   visible: boolean;
   message: string;
   onClose: () => void;
+  duration?: number;
 }
 
-function Toast({ visible, message, onClose }: ToastProps) {
+function Toast({ visible, message, onClose, duration = 1500 }: ToastProps) {
+  useEffect(() => {
+    if (!visible) return;
+    const timer = setTimeout(() => {
+      onClose();
+    }, duration);
+    return () => clearTimeout(timer);
+  }, [visible, onClose]);
+
   if (!visible) return null;
 
   return (

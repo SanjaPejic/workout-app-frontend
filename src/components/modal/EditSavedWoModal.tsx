@@ -12,6 +12,7 @@ import { updateWorkout } from "@/api/client-service";
 import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
+import Toast from "../shared/Toast";
 
 interface EditSavedWoModalProps {
   workout: Workout;
@@ -70,6 +71,11 @@ function EditSavedWoModal({
   const [isRemoveExConfModalOpen, setIsRemoveExConfModalOpen] = useState(false);
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const [toast, setToast] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: "",
+  });
 
   const queryClient = useQueryClient();
 
@@ -138,6 +144,10 @@ function EditSavedWoModal({
       // Invalidate the workouts query to refresh the list of saved workouts
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.WORKOUTS, userId],
+      });
+      setToast({
+        visible: true,
+        message: "Updated Workout",
       });
     },
     onError: (error: any) => {
@@ -290,6 +300,12 @@ function EditSavedWoModal({
             title="DO YOU WANT TO UPDATE THE WORKOUT?"
           />
         )}
+        {/*Toast Notification*/}
+        <Toast
+          visible={toast.visible}
+          message={toast.message}
+          onClose={() => setToast({ visible: false, message: "" })}
+        />
       </DialogContent>
     </Dialog>
   );
