@@ -8,9 +8,10 @@ import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
 import ConformationModal from "./ConfirmationModal";
 import SaveWoConformationModal from "./SaveWoConformmationModal";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createWorkout } from "@/api/client-service";
 import { useUserStore } from "@/constants/UserStore";
+import { QueryKeys } from "@/api/constants/query-keys";
 
 interface CreateWorkoutModalProps {
   exercises: Exercise[];
@@ -37,7 +38,7 @@ function CreateWorkoutModal({
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
     () =>
       exercises.map((ex) => ({
-        id: ex.id,
+        id: ex.id, // dummy value
         exercise: ex,
         sets: 0,
         reps: 0,
@@ -52,6 +53,8 @@ function CreateWorkoutModal({
   const [isRemoveExConfModalOpen, setIsRemoveExConfModalOpen] = useState(false);
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const queryClient = useQueryClient();
 
   const handleOpenConformationModal = (workoutExerciseId: number) => {
     setWorkoutExIdToRemove(workoutExerciseId);
@@ -123,10 +126,10 @@ function CreateWorkoutModal({
       workoutExercises: WorkoutExercise[];
     }) => createWorkout(userId, name, workoutExercises),
     onSuccess: () => {
-      // Invalidate the workouts query to refresh the list
-      // queryClient.invalidateQueries({
-      //   queryKey: [QueryKeys.WORKOUTS, userId],
-      // });
+      // Invalidate the workouts query to refresh the list of saved workouts
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.WORKOUTS, userId],
+      });
     },
     onError: (error: any) => {
       alert(error?.response?.data || "Failed to save workout");

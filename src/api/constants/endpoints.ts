@@ -19,5 +19,5 @@ export const workoutsEndpoint = {
     allByUserId: "/workouts/user/:userId",
     deleteOne: "/workouts/:workoutId",
     create: "/workouts",
-    update: "/workouts/:workoutId"
+    update: "/workouts"
 }

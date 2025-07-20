@@ -8,7 +8,7 @@ import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
 import ConformationModal from "./ConfirmationModal";
 import SaveWoConformationModal from "./SaveWoConformmationModal";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createWorkout, updateWorkout } from "@/api/client-service";
 import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
@@ -18,6 +18,25 @@ interface EditSavedWoModalProps {
   workout: Workout;
   onClose: () => void;
   injuredMuscles: Muscle[];
+}
+
+function mapWorkoutForUpdate(
+  workout: Workout,
+  workoutExercises: WorkoutExercise[]
+): Workout {
+  return {
+    id: workout.id,
+    name: workout.name,
+    userId: workout.userId,
+    date: "", // dummy value
+    workoutExercises: workoutExercises.map((we) => ({
+      id: 0, // dummy value
+      sets: we.sets,
+      reps: we.reps,
+      kilos: we.kilos,
+      exercise: { id: we.exercise.id } as Exercise,
+    })),
+  };
 }
 
 function EditSavedWoModal({
@@ -54,6 +73,8 @@ function EditSavedWoModal({
   const [isRemoveExConfModalOpen, setIsRemoveExConfModalOpen] = useState(false);
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const queryClient = useQueryClient();
 
   const handleOpenConformationModal = (workoutExerciseId: number) => {
     setWorkoutExIdToRemove(workoutExerciseId);
@@ -112,13 +133,15 @@ function EditSavedWoModal({
 
   const userId = useUserStore((state) => state.id);
 
+  // Utility function: maps a Workout for backend update
+
   const updateWorkoutMutation = useMutation({
     mutationFn: ({ workout }: { workout: Workout }) => updateWorkout(workout),
     onSuccess: () => {
-      // Invalidate the workouts query to refresh the list
-      // queryClient.invalidateQueries({
-      //   queryKey: [QueryKeys.WORKOUTS, userId],
-      // });
+      // Invalidate the workouts query to refresh the list of saved workouts
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.WORKOUTS, userId],
+      });
     },
     onError: (error: any) => {
       alert(error?.response?.data || "Failed to update workout");
@@ -126,9 +149,17 @@ function EditSavedWoModal({
   });
 
   const handleOnYesUpdate = () => {
-    if (!userId) return;
-    if (!workout) return;
-    updateWorkoutMutation.mutate({ workout });
+    if (!userId || !workout) return;
+
+    console.log(workout);
+
+    // Use the mapper function!
+    const updatedWorkout = mapWorkoutForUpdate(workout, workoutExercises);
+
+    console.log("Here is the sanitised workout:");
+    console.log(updatedWorkout);
+
+    updateWorkoutMutation.mutate({ workout: updatedWorkout });
   };
 
   return (

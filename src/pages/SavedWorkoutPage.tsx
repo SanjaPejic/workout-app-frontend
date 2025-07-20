@@ -152,7 +152,7 @@ function SavedWorkoutPage() {
         <EditSavedWoModal
           workout={selectedWorkout}
           onClose={() => setSelectedWorkout(null)}
-          injuredMuscles={[]} // should pass appliedInjuredMuscles
+          injuredMuscles={[]} // should pass appliedInjuredMuscles!!!!!
         />
       )}
     </div>

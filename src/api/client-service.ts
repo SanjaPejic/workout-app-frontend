@@ -58,7 +58,8 @@ export const createWorkout = async (userId: number, name: string, workoutExercis
 }
 
 export const updateWorkout = async (workout: Workout) => {
-  const endpoint = workoutsEndpoint.update.replace("workoutId", `${workout.id}`);
-  const response = await apiClient.put(endpoint, {workout});
+console.log({workout})
+  const endpoint = workoutsEndpoint.update;
+  const response = await apiClient.put(endpoint, workout);
   return response.data;
 }
