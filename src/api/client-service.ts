@@ -1,5 +1,7 @@
-import {exercisesEndpoints, musclesEndpoints, usersEndpoint} from "./constants/endpoints";
+import {exercisesEndpoints, injuriesEndpoint, musclesEndpoints, usersEndpoint, workoutsEndpoint} from "./constants/endpoints";
 import { apiClient } from "./api-client";
+import type { WorkoutExercise } from "@/types/WorkoutExercise";
+import type { Workout } from "@/types/Workout";
 
 export const getExercises = async () => {
   const endpoint = exercisesEndpoints.getAll;
@@ -22,5 +24,42 @@ export const getUser = async (username: string) => {
 export const createUser = async (username: string) => {
   const endpoint = usersEndpoint.create;
   const response = await apiClient.post(endpoint, {username});
+  return response.data;
+}
+
+export const getUserInjuries = async (userId: number) => {
+  const endpoint = injuriesEndpoint.allByUserId.replace(":userId", `${userId}`);
+  const response = await apiClient.get(endpoint);
+  return response.data;
+};
+
+export const updateUserInjuries = async (userId: number, injuries: { muscle: { id: number; name: string } }[]) => {
+  const endpoint = injuriesEndpoint.allByUserId.replace(":userId", `${userId}`);
+  const response = await apiClient.put(endpoint, injuries);
+  return response.data;
+};
+
+export const getWorkouts = async (userId: number) => {
+  const endpoint = workoutsEndpoint.allByUserId.replace(":userId", `${userId}`);
+  const response = await apiClient.get(endpoint);
+  return response.data;
+}
+
+export const deleteWorkout = async (workoutId: number) => {
+  const endpoint = workoutsEndpoint.deleteOne.replace(":workoutId", `${workoutId}`);
+  const response = await apiClient.delete(endpoint);
+  return response.data;
+}
+
+export const createWorkout = async (userId: number, name: string, workoutExercises: WorkoutExercise[]) => {
+  const endpoint = workoutsEndpoint.create;
+  const response = await apiClient.post(endpoint, {userId, name, workoutExercises});
+  return response.data;
+}
+
+export const updateWorkout = async (workout: Workout) => {
+console.log({workout})
+  const endpoint = workoutsEndpoint.update;
+  const response = await apiClient.put(endpoint, workout);
   return response.data;
 }

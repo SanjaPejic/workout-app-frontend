@@ -7,20 +7,42 @@ import { useState } from "react";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
 import ConformationModal from "./ConfirmationModal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateWorkout } from "@/api/client-service";
+import { useUserStore } from "@/constants/UserStore";
+import { QueryKeys } from "@/api/constants/query-keys";
+import type { Workout } from "@/types/Workout";
 
-interface WorkoutModalProps {
-  exercises: Exercise[];
+interface EditSavedWoModalProps {
+  workout: Workout;
   onClose: () => void;
-  onRemoveExercise: (exercise: Exercise) => void;
   injuredMuscles: Muscle[];
 }
 
-function WorkoutModal({
-  exercises,
+function mapWorkoutForUpdate(
+  workout: Workout,
+  workoutExercises: WorkoutExercise[]
+): Workout {
+  return {
+    id: workout.id,
+    name: workout.name,
+    userId: workout.userId,
+    date: "", // dummy value
+    workoutExercises: workoutExercises.map((we) => ({
+      id: 0, // dummy value
+      sets: we.sets,
+      reps: we.reps,
+      kilos: we.kilos,
+      exercise: { id: we.exercise.id } as Exercise,
+    })),
+  };
+}
+
+function EditSavedWoModal({
+  workout,
   onClose,
-  onRemoveExercise,
   injuredMuscles,
-}: WorkoutModalProps) {
+}: EditSavedWoModalProps) {
   const hasInjuredMuscle = (exercise: Exercise) => {
     return exercise.targetMuscles.some((targetMuscle) =>
       injuredMuscles.some(
@@ -32,14 +54,16 @@ function WorkoutModal({
   // Initialise state - adding default sets/reps/kilos = 0 :
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
     () =>
-      exercises.map((ex) => ({
-        id: ex.id,
-        exercise: ex,
-        sets: 0,
-        reps: 0,
-        kilos: 0,
+      workout.workoutExercises.map((wEx) => ({
+        id: wEx.id,
+        exercise: wEx.exercise,
+        sets: wEx.sets,
+        reps: wEx.reps,
+        kilos: wEx.kilos,
       }))
   );
+
+  const [isConfUpdateModalOpen, setIsConfUpdateModalOpen] = useState(false);
 
   const [workoutExIdToRemove, setWorkoutExIdToRemove] = useState<number>();
 
@@ -47,17 +71,19 @@ function WorkoutModal({
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
+  const queryClient = useQueryClient();
+
   const handleOpenConformationModal = (workoutExerciseId: number) => {
     setWorkoutExIdToRemove(workoutExerciseId);
     setIsRemoveExConfModalOpen(true);
   };
 
-  const handleOnYes = () => {
+  const handleOnYesRemove = () => {
     removeExercise(workoutExIdToRemove);
     setIsRemoveExConfModalOpen(false);
   };
 
-  const handleOnNo = () => {
+  const handleOnNoRemove = () => {
     setIsRemoveExConfModalOpen(false);
   };
 
@@ -72,15 +98,9 @@ function WorkoutModal({
   };
 
   const removeExercise = (id?: number) => {
-    // find the object in the local state
-    const toRemove = workoutExercises.find((we) => we.exercise.id === id);
-    if (!toRemove) return;
-
-    // notify the parent with the original Exercise
-    onRemoveExercise(toRemove.exercise);
-
-    // remove locally
+    // remove the object from the local state
     setWorkoutExercises((exs) => exs.filter((ex) => ex.id !== id));
+    return;
   };
 
   const handleDragStart = (index: number) => {
@@ -104,6 +124,41 @@ function WorkoutModal({
     setDraggedIndex(null);
   };
 
+  const handleOnNoUpdate = () => {
+    setIsConfUpdateModalOpen(false);
+  };
+
+  const userId = useUserStore((state) => state.id);
+
+  // Utility function: maps a Workout for backend update
+
+  const updateWorkoutMutation = useMutation({
+    mutationFn: ({ workout }: { workout: Workout }) => updateWorkout(workout),
+    onSuccess: () => {
+      // Invalidate the workouts query to refresh the list of saved workouts
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.WORKOUTS, userId],
+      });
+    },
+    onError: (error: any) => {
+      alert(error?.response?.data || "Failed to update workout");
+    },
+  });
+
+  const handleOnYesUpdate = () => {
+    if (!userId || !workout) return;
+
+    console.log(workout);
+
+    // Use the mapper function!
+    const updatedWorkout = mapWorkoutForUpdate(workout, workoutExercises);
+
+    console.log("Here is the sanitised workout:");
+    console.log(updatedWorkout);
+
+    updateWorkoutMutation.mutate({ workout: updatedWorkout });
+  };
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="[&>button]:hidden p-0 !max-w-6xl !max-h-[90vh] overflow-y-auto">
@@ -121,7 +176,7 @@ function WorkoutModal({
           <div className="p-6 pb-4">
             <DialogTitle asChild>
               <h2 className="font-bold text-gray-900 text-2xl text-center">
-                Custom Workout ({workoutExercises.length})
+                {workout.name}
               </h2>
             </DialogTitle>
 
@@ -190,17 +245,19 @@ function WorkoutModal({
                     <span className="font-medium text-gray-900 text-sm uppercase">
                       misic
                     </span>
-                    <span className="text-gray-600 text-sm">procenat%</span>
+                    <span className="text-gray-600 text-sm">
+                      !!!!!!procenat% (need to fix)
+                    </span>
                   </div>
                   <div className="bg-gray-200 rounded-full w-full h-2">
                     <div
                       className="bg-slate-600 rounded-full h-2 transition-all duration-300"
-                      style={{ width: `${50}%` }}
+                      style={{ width: `${50}% (need to fix)` }}
                     />
                   </div>
                 </div>
               </div>
-              {/*Buttons: Download PDF + Save*/}
+              {/*Buttons: Download PDF + Save/Update*/}
               <div className="flex gap-4 pt-4">
                 <Button
                   variant="outline"
@@ -208,8 +265,12 @@ function WorkoutModal({
                 >
                   Download PDF
                 </Button>
-                <Button className="flex-1 bg-slate-600 hover:bg-slate-700 py-2 rounded-lg text-white">
-                  SAVE
+
+                <Button
+                  onClick={() => setIsConfUpdateModalOpen(true)}
+                  className="flex-1 bg-slate-600 hover:bg-slate-700 py-2 rounded-lg text-white"
+                >
+                  UPDATE
                 </Button>
               </div>
             </div>
@@ -220,15 +281,24 @@ function WorkoutModal({
         {isRemoveExConfModalOpen && (
           <ConformationModal
             isOpen={isRemoveExConfModalOpen}
-            onYes={handleOnYes}
-            onNo={handleOnNo}
+            onYes={handleOnYesRemove}
+            onNo={handleOnNoRemove}
             title="DO YOU WANT TO REMOVE THE EXERCISE?"
           />
         )}
-        {/*Save Workout Dialog*/}
+
+        {/*Update Workout Conformation Dialog*/}
+        {isConfUpdateModalOpen && (
+          <ConformationModal
+            isOpen={isConfUpdateModalOpen}
+            onYes={handleOnYesUpdate}
+            onNo={handleOnNoUpdate}
+            title="DO YOU WANT TO UPDATE THE WORKOUT?"
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
 }
 
-export default WorkoutModal;
+export default EditSavedWoModal;
