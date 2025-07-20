@@ -7,9 +7,8 @@ import { useState } from "react";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Muscle } from "@/types/Muscle";
 import ConformationModal from "./ConfirmationModal";
-import SaveWoConformationModal from "./SaveWoConformmationModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createWorkout, updateWorkout } from "@/api/client-service";
+import { updateWorkout } from "@/api/client-service";
 import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
@@ -65,8 +64,6 @@ function EditSavedWoModal({
   );
 
   const [isConfUpdateModalOpen, setIsConfUpdateModalOpen] = useState(false);
-
-  const [isSavedWoModalOpen, setIsSavedWoModalOpen] = useState(false);
 
   const [workoutExIdToRemove, setWorkoutExIdToRemove] = useState<number>();
 
