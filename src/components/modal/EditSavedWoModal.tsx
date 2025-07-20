@@ -148,13 +148,7 @@ function EditSavedWoModal({
   const handleOnYesUpdate = () => {
     if (!userId || !workout) return;
 
-    console.log(workout);
-
-    // Use the mapper function!
     const updatedWorkout = mapWorkoutForUpdate(workout, workoutExercises);
-
-    console.log("Here is the sanitised workout:");
-    console.log(updatedWorkout);
 
     updateWorkoutMutation.mutate({ workout: updatedWorkout });
   };

@@ -1,6 +1,5 @@
 import {exercisesEndpoints, injuriesEndpoint, musclesEndpoints, usersEndpoint, workoutsEndpoint} from "./constants/endpoints";
 import { apiClient } from "./api-client";
-import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import type { Workout } from "@/types/Workout";
 
 export const getExercises = async () => {
@@ -51,9 +50,11 @@ export const deleteWorkout = async (workoutId: number) => {
   return response.data;
 }
 
-export const createWorkout = async (userId: number, name: string, workoutExercises: WorkoutExercise[]) => {
+// userId: number, name: string, workoutExercises: WorkoutExercise[]
+
+export const createWorkout = async (workoutForSaving: Workout) => {
   const endpoint = workoutsEndpoint.create;
-  const response = await apiClient.post(endpoint, {userId, name, workoutExercises});
+  const response = await apiClient.post(endpoint, workoutForSaving);
   return response.data;
 }
 

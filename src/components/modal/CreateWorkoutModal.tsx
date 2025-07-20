@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createWorkout } from "@/api/client-service";
 import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
+import type { Workout } from "@/types/Workout";
 
 interface CreateWorkoutModalProps {
   exercises: Exercise[];
@@ -116,15 +117,8 @@ function CreateWorkoutModal({
   const userId = useUserStore((state) => state.id);
 
   const saveWorkoutMutation = useMutation({
-    mutationFn: ({
-      userId,
-      name,
-      workoutExercises,
-    }: {
-      userId: number;
-      name: string;
-      workoutExercises: WorkoutExercise[];
-    }) => createWorkout(userId, name, workoutExercises),
+    mutationFn: ({ workoutForSaving }: { workoutForSaving: Workout }) =>
+      createWorkout(workoutForSaving),
     onSuccess: () => {
       // Invalidate the workouts query to refresh the list of saved workouts
       queryClient.invalidateQueries({
@@ -138,10 +132,15 @@ function CreateWorkoutModal({
 
   const handleConfOnSave = (workoutName: string) => {
     if (!userId) return;
-    saveWorkoutMutation.mutate({
-      userId,
+    const workoutForSaving: Workout = {
+      id: 0, // dummy value
+      date: "", // dummy value
+      userId: userId,
       name: workoutName,
-      workoutExercises,
+      workoutExercises: workoutExercises,
+    };
+    saveWorkoutMutation.mutate({
+      workoutForSaving,
     });
   };
 
