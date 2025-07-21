@@ -136,8 +136,6 @@ function EditSavedWoModal({
 
   const userId = useUserStore((state) => state.id);
 
-  // Utility function: maps a Workout for backend update
-
   const updateWorkoutMutation = useMutation({
     mutationFn: ({ workout }: { workout: Workout }) => updateWorkout(workout),
     onSuccess: () => {
