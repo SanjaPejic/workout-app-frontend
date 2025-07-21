@@ -1,34 +1,34 @@
-import {
-  deleteWorkout,
-  getWorkouts,
-  updateWorkout,
-} from "@/api/client-service";
+import { deleteWorkout, getWorkouts } from "@/api/client-service";
 import { QueryKeys } from "@/api/constants/query-keys";
 import ConformationModal from "@/components/modal/ConfirmationModal";
 import EditSavedWoModal from "@/components/modal/EditSavedWoModal";
-import WorkoutModal from "@/components/modal/EditSavedWoModal";
 import SavedWorkoutCard from "@/components/savedWorkoutPage/SavedWorkoutCard";
 import AppLoader from "@/components/shared/AppLoader";
+import InjuryButton from "@/components/shared/InjuryButton";
+import Toast from "@/components/shared/Toast";
 import { useUserStore } from "@/constants/UserStore";
-import type { Exercise } from "@/types/Exercise";
+import type { Muscle } from "@/types/Muscle";
 import type { Workout } from "@/types/Workout";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 function SavedWorkoutPage() {
-  //injury button needs to be exactly the same as the one on the create workout page
-  //     const applyInjuries = () => {
-  //     setAppliedInjuredMuscles(tempInjuredMuscles);
-  //     setIsInjuriesOpen(false);
-  //     updateInjuriesMutation.mutate(tempInjuredMuscles);
-  //   };
-
+  const [isInjuriesOpen, setIsInjuriesOpen] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [workoutIdToDelete, setWorkoutIdToDelete] = useState<number>();
   const [isDeleteWoConfModalOpen, setIsDeleteWoConfModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const userId = useUserStore((state) => state.id);
+  const [toast, setToast] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: "",
+  });
 
+  const injuriesData = queryClient.getQueryData<
+    { id: number; muscle: Muscle; user: { id: number; username: string } }[]
+  >([QueryKeys.INJURIES, userId]);
+
+  console.log(injuriesData);
   const { data: workoutsData, isLoading: isWorkoutsDataLoading } = useQuery<
     Workout[]
   >({
@@ -84,28 +84,11 @@ function SavedWorkoutPage() {
           {/*Left side: search + filter button + injuries button*/}
           <div className="flex items-center gap-3">
             {/*Injuries Button*/}
-            {/* <Popover open={isInjuriesOpen} onOpenChange={handleInjuriesOpen}>
-              <PopoverTrigger asChild>
-                <div>
-                  <FilterButton
-                    icon={AlertTriangle}
-                    label="Injuries"
-                    count={appliedInjuredMuscles.length}
-                    onClick={() => {}}
-                    variant="warning"
-                  />
-                </div>
-              </PopoverTrigger>
-              <FilterPopover
-                title="Select Injuries"
-                subtitle="Mark injured muscles"
-                selectedItems={tempInjuredMuscles}
-                onItemsChange={setTempInjuredMuscles}
-                onApply={applyInjuries}
-                onClear={clearInjuries}
-                variant="warning"
-              />
-            </Popover> */}
+            <InjuryButton
+              isInjuriesOpen={isInjuriesOpen}
+              setIsInjuriesOpen={setIsInjuriesOpen}
+              setToast={setToast}
+            />
           </div>
         </div>
 
@@ -152,9 +135,14 @@ function SavedWorkoutPage() {
         <EditSavedWoModal
           workout={selectedWorkout}
           onClose={() => setSelectedWorkout(null)}
-          injuredMuscles={[]} // should pass appliedInjuredMuscles!!!!!
+          injuredMuscles={injuriesData?.map((injury) => injury.muscle) || []}
         />
       )}
+      <Toast
+        visible={toast.visible}
+        message={toast.message}
+        onClose={() => setToast({ visible: false, message: "" })}
+      />
     </div>
   );
 }

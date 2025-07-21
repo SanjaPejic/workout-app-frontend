@@ -50,8 +50,6 @@ export const deleteWorkout = async (workoutId: number) => {
   return response.data;
 }
 
-// userId: number, name: string, workoutExercises: WorkoutExercise[]
-
 export const createWorkout = async (workoutForSaving: Workout) => {
   const endpoint = workoutsEndpoint.create;
   const response = await apiClient.post(endpoint, workoutForSaving);

@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import AppLoader from "@/components/shared/AppLoader";
-import { AlertTriangle, Search, SlidersHorizontal, Trash2 } from "lucide-react";
+import { Search, SlidersHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { getExercises } from "@/api/client-service";
+import { getExercises, getUserInjuries } from "@/api/client-service";
 import type { Exercise } from "@/types/Exercise";
 import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
 import Toast from "@/components/shared/Toast";
@@ -13,11 +13,10 @@ import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
 import { QueryKeys } from "@/api/constants/query-keys";
-import { useUserStore } from "@/constants/UserStore";
-import { getUserInjuries, updateUserInjuries } from "@/api/client-service";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import CreateWorkoutModal from "@/components/modal/CreateWorkoutModal";
+import InjuryButton from "@/components/shared/InjuryButton";
+import { useUserStore } from "@/constants/UserStore";
 
 function CreateWorkoutPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,15 +31,11 @@ function CreateWorkoutPage() {
     []
   );
   const [tempTargetMuscles, setTempTargetMuscles] = useState<Muscle[]>([]);
-  const [appliedInjuredMuscles, setAppliedInjuredMuscles] = useState<Muscle[]>(
-    []
-  );
-  const [tempInjuredMuscles, setTempInjuredMuscles] = useState<Muscle[]>([]);
+
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null
   );
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
-  const userId = useUserStore((state) => state.id);
 
   const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
     Exercise[]
@@ -49,39 +44,14 @@ function CreateWorkoutPage() {
     queryFn: getExercises,
   });
 
+  const userId = useUserStore((state) => state.id);
+
   const { data: injuriesData } = useQuery<
     { id: number; muscle: Muscle; user: { id: number; username: string } }[]
   >({
     queryKey: [QueryKeys.INJURIES, userId],
     queryFn: () => getUserInjuries(userId!),
     enabled: !!userId,
-  });
-
-  useEffect(() => {
-    if (injuriesData) {
-      setAppliedInjuredMuscles(injuriesData.map((injury) => injury.muscle));
-    }
-  }, [injuriesData]);
-
-  const queryClient = useQueryClient();
-
-  const updateInjuriesMutation = useMutation({
-    mutationFn: (injuries: Muscle[]) =>
-      updateUserInjuries(
-        userId!,
-        injuries.map((muscle) => ({ muscle }))
-      ),
-    onSuccess: (response) => {
-      setAppliedInjuredMuscles(response.map((injury: any) => injury.muscle));
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.INJURIES, userId] });
-      setToast({ visible: true, message: "Applyed injuries" });
-    },
-    onError: (error: any) => {
-      setToast({
-        visible: true,
-        message: error?.response?.data || "Failed to apply injuries",
-      });
-    },
   });
 
   const filteredExercises = exercisesData?.filter((exercise) => {
@@ -106,20 +76,15 @@ function CreateWorkoutPage() {
       setTempExercises((prev) => prev.filter((ex) => ex.id !== exercise.id));
       setToast({
         visible: true,
-        message: `REMOVED ${exercise.name}`,
+        message: `Removed ${exercise.name}`,
       });
     } else {
       setTempExercises((prev) => [...prev, exercise]);
       setToast({
         visible: true,
-        message: `ADDED ${exercise.name}`,
+        message: `Added ${exercise.name}`,
       });
     }
-
-    // Hide toast after 2 seconds
-    setTimeout(() => {
-      setToast({ visible: false, message: "" });
-    }, 2000);
   };
 
   //Clear temp workout
@@ -131,10 +96,6 @@ function CreateWorkoutPage() {
       visible: true,
       message: "Workout cleared",
     });
-
-    setTimeout(() => {
-      setToast({ visible: false, message: "" });
-    }, 2000);
   };
 
   // Filter handlers (target muscles)
@@ -152,24 +113,6 @@ function CreateWorkoutPage() {
 
   const clearTargetFilters = () => {
     setTempTargetMuscles([]);
-  };
-
-  //Injuries handlers
-  const handleInjuriesOpen = (open: boolean) => {
-    if (open) {
-      setTempInjuredMuscles(appliedInjuredMuscles);
-    }
-    setIsInjuriesOpen(open);
-  };
-
-  const applyInjuries = () => {
-    setAppliedInjuredMuscles(tempInjuredMuscles);
-    setIsInjuriesOpen(false);
-    updateInjuriesMutation.mutate(tempInjuredMuscles);
-  };
-
-  const clearInjuries = () => {
-    setTempInjuredMuscles([]);
   };
 
   return (
@@ -194,7 +137,6 @@ function CreateWorkoutPage() {
                 className="shadow-sm py-3 pr-4 pl-10 border-2 border-gray-200 focus:border-cyan-400 rounded-xl focus:ring-0 w-80 font-medium"
               />
             </div>
-
             {/*Filter Button*/}
             <Popover open={isFilterOpen} onOpenChange={handleFilterOpen}>
               <PopoverTrigger asChild>
@@ -218,28 +160,11 @@ function CreateWorkoutPage() {
             </Popover>
 
             {/*Injuries Button*/}
-            <Popover open={isInjuriesOpen} onOpenChange={handleInjuriesOpen}>
-              <PopoverTrigger asChild>
-                <div>
-                  <FilterButton
-                    icon={AlertTriangle}
-                    label="Injuries"
-                    count={appliedInjuredMuscles.length}
-                    onClick={() => {}}
-                    variant="warning"
-                  />
-                </div>
-              </PopoverTrigger>
-              <FilterPopover
-                title="Select Injuries"
-                subtitle="Mark injured muscles"
-                selectedItems={tempInjuredMuscles}
-                onItemsChange={setTempInjuredMuscles}
-                onApply={applyInjuries}
-                onClear={clearInjuries}
-                variant="warning"
-              />
-            </Popover>
+            <InjuryButton
+              isInjuriesOpen={isInjuriesOpen}
+              setIsInjuriesOpen={setIsInjuriesOpen}
+              setToast={setToast}
+            />
           </div>
 
           {/*Right side: clear + view*/}
@@ -274,7 +199,9 @@ function CreateWorkoutPage() {
                 isAdded={
                   tempExercises.some((ex) => ex.id === exercise.id) ?? false
                 }
-                injuredMuscles={appliedInjuredMuscles}
+                injuredMuscles={
+                  injuriesData?.map((injury) => injury.muscle) || []
+                }
                 onExerciseClick={() => setSelectedExercise(exercise)}
               />
             ))
@@ -304,7 +231,7 @@ function CreateWorkoutPage() {
           onRemoveExercise={(exercise: Exercise) =>
             handleToggleExercise(exercise)
           }
-          injuredMuscles={appliedInjuredMuscles}
+          injuredMuscles={injuriesData?.map((injury) => injury.muscle) || []}
         />
       )}
     </div>

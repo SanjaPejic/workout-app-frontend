@@ -110,8 +110,8 @@ function FilterPopover({
         </div>
 
         {/*Search Input*/}
-        <div className="relative">
-          <Search className="top-1/2 left-2 absolute w-4 h-4 text-gray-400 -translate-y-1/2 transform" />
+        <div className="relative px-1">
+          <Search className="top-1/2 left-3 absolute w-4 h-4 text-gray-400 -translate-y-1/2 transform" />
           <Input
             type="text"
             placeholder="Search muscles..."
