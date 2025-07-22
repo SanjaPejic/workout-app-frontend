@@ -13,13 +13,13 @@ import FilterButton from "@/components/shared/FilterButton";
 import type { Muscle } from "@/types/Muscle";
 import ExerciseModal from "@/components/createWorkoutPage/ExerciseModal";
 import { QueryKeys } from "@/api/constants/query-keys";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import CreateWorkoutModal from "@/components/modal/CreateWorkoutModal";
 import InjuryButton from "@/components/shared/InjuryButton";
 import { useUserStore } from "@/constants/UserStore";
+import type { PageableResponse } from "@/types/PageableResponse";
 
 function CreateWorkoutPage() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isInjuriesOpen, setIsInjuriesOpen] = useState(false);
   const [tempExercises, setTempExercises] = useState<Exercise[]>([]);
@@ -37,11 +37,23 @@ function CreateWorkoutPage() {
   );
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
 
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const pageSize = 10;
+
+  const targetMuscNames = appliedTargetMuscles.map((muscle) => muscle.name);
+
+  console.log(targetMuscNames);
+
   const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
-    Exercise[]
+    PageableResponse<Exercise>
   >({
-    queryKey: [QueryKeys.EXERCISES],
-    queryFn: getExercises,
+    queryKey: [QueryKeys.EXERCISES, pageNumber, searchTerm, targetMuscNames],
+    queryFn: () =>
+      getExercises(pageNumber, pageSize, searchTerm, targetMuscNames),
+    placeholderData: keepPreviousData,
   });
 
   const userId = useUserStore((state) => state.id);
@@ -52,21 +64,6 @@ function CreateWorkoutPage() {
     queryKey: [QueryKeys.INJURIES, userId],
     queryFn: () => getUserInjuries(userId!),
     enabled: !!userId,
-  });
-
-  const filteredExercises = exercisesData?.filter((exercise) => {
-    const matchesSearch = exercise.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const hasTargetMuscle =
-      appliedTargetMuscles.length === 0 ||
-      appliedTargetMuscles.some((appliedMuscle) =>
-        exercise.targetMuscles.some(
-          (targetMuscle) => targetMuscle.muscle.id === appliedMuscle.id
-        )
-      );
-
-    return matchesSearch && hasTargetMuscle;
   });
 
   //Remove or Add an Exercise
@@ -109,6 +106,7 @@ function CreateWorkoutPage() {
   const applyTargetFilters = () => {
     setAppliedTargetMuscles(tempTargetMuscles);
     setIsFilterOpen(false);
+    setPageNumber(0);
   };
 
   const clearTargetFilters = () => {
@@ -133,7 +131,10 @@ function CreateWorkoutPage() {
                 type="text"
                 placeholder="Search exercises..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPageNumber(0);
+                }}
                 className="shadow-sm py-3 pr-4 pl-10 border-2 border-gray-200 focus:border-cyan-400 rounded-xl focus:ring-0 w-80 font-medium"
               />
             </div>
@@ -191,7 +192,7 @@ function CreateWorkoutPage() {
           {isExercisesDataLoading ? (
             <AppLoader />
           ) : (
-            filteredExercises?.map((exercise) => (
+            exercisesData?.content.map((exercise: Exercise) => (
               <ExerciseCard
                 key={exercise.id}
                 exercise={exercise}
@@ -206,6 +207,31 @@ function CreateWorkoutPage() {
               />
             ))
           )}
+        </div>
+
+        {/*Page Navigation*/}
+        <div className="flex justify-center items-center gap-2 mt-8">
+          <Button
+            onClick={() => setPageNumber((p) => Math.max(0, p - 1))}
+            disabled={exercisesData?.number === 0}
+            className="bg-cyan-600 hover:bg-cyan-700 px-6 py-3 border-2 border-cyan-800 rounded-lg font-semibold text-white"
+          >
+            Previous
+          </Button>
+          <span>
+            Page {exercisesData ? exercisesData.number + 1 : 1} of{" "}
+            {exercisesData?.totalPages ?? 1}
+          </span>
+          <Button
+            onClick={() => setPageNumber((p) => p + 1)}
+            disabled={
+              (exercisesData?.number ?? 0) >=
+              (exercisesData?.totalPages ?? 1) - 1
+            }
+            className="bg-cyan-600 hover:bg-cyan-700 px-6 py-3 border-2 border-cyan-800 rounded-lg font-semibold text-white"
+          >
+            Next
+          </Button>
         </div>
       </div>
 

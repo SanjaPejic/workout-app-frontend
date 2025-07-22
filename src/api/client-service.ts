@@ -2,9 +2,12 @@ import {exercisesEndpoints, injuriesEndpoint, musclesEndpoints, usersEndpoint, w
 import { apiClient } from "./api-client";
 import type { Workout } from "@/types/Workout";
 
-export const getExercises = async () => {
+export const getExercises = async (pageNumber: number, pageSize: number, searchTerm: string, targetMuscNames: string[]) => {
+  console.log("In API:",targetMuscNames )
   const endpoint = exercisesEndpoints.getAll;
-  const response = await apiClient.get(endpoint);
+  const response = await apiClient.get(endpoint, {
+    params: { page: pageNumber, size: pageSize, searchTerm, targetMuscles: targetMuscNames},
+  });
   return response.data;
 };
 
