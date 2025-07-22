@@ -18,7 +18,6 @@ import CreateWorkoutModal from "@/components/modal/CreateWorkoutModal";
 import InjuryButton from "@/components/shared/InjuryButton";
 import { useUserStore } from "@/constants/UserStore";
 import type { PageableResponse } from "@/types/PageableResponse";
-import type { TargetMuscle } from "@/types/TargetMuscle";
 
 function CreateWorkoutPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -44,11 +43,16 @@ function CreateWorkoutPage() {
 
   const pageSize = 10;
 
+  const targetMuscNames = appliedTargetMuscles.map((muscle) => muscle.name);
+
+  console.log(targetMuscNames);
+
   const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
     PageableResponse<Exercise>
   >({
-    queryKey: [QueryKeys.EXERCISES, pageNumber, searchTerm],
-    queryFn: () => getExercises(pageNumber, pageSize, searchTerm),
+    queryKey: [QueryKeys.EXERCISES, pageNumber, searchTerm, targetMuscNames],
+    queryFn: () =>
+      getExercises(pageNumber, pageSize, searchTerm, targetMuscNames),
     placeholderData: keepPreviousData,
   });
 
@@ -61,20 +65,6 @@ function CreateWorkoutPage() {
     queryFn: () => getUserInjuries(userId!),
     enabled: !!userId,
   });
-
-  const filteredExercises = exercisesData?.content.filter(
-    (exercise: Exercise) => {
-      const hasTargetMuscle =
-        appliedTargetMuscles.length === 0 ||
-        appliedTargetMuscles.some((appliedMuscle) =>
-          exercise.targetMuscles.some(
-            (targetMuscle: TargetMuscle) =>
-              targetMuscle.muscle.id === appliedMuscle.id
-          )
-        );
-      return hasTargetMuscle;
-    }
-  );
 
   //Remove or Add an Exercise
   const handleToggleExercise = (exercise: Exercise) => {
@@ -201,7 +191,7 @@ function CreateWorkoutPage() {
           {isExercisesDataLoading ? (
             <AppLoader />
           ) : (
-            filteredExercises?.map((exercise: Exercise) => (
+            exercisesData?.content.map((exercise: Exercise) => (
               <ExerciseCard
                 key={exercise.id}
                 exercise={exercise}
