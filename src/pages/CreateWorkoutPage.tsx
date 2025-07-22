@@ -106,6 +106,7 @@ function CreateWorkoutPage() {
   const applyTargetFilters = () => {
     setAppliedTargetMuscles(tempTargetMuscles);
     setIsFilterOpen(false);
+    setPageNumber(0);
   };
 
   const clearTargetFilters = () => {
