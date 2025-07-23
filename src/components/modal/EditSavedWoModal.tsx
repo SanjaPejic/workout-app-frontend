@@ -13,6 +13,7 @@ import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
 import Toast from "../shared/Toast";
+import { useNavigate } from "react-router-dom";
 
 interface EditSavedWoModalProps {
   workout: Workout;
@@ -63,6 +64,8 @@ function EditSavedWoModal({
         kilos: wEx.kilos,
       }))
   );
+
+  const navigate = useNavigate();
 
   const [isConfUpdateModalOpen, setIsConfUpdateModalOpen] = useState(false);
 
@@ -136,8 +139,6 @@ function EditSavedWoModal({
 
   const userId = useUserStore((state) => state.id);
 
-  // Utility function: maps a Workout for backend update
-
   const updateWorkoutMutation = useMutation({
     mutationFn: ({ workout }: { workout: Workout }) => updateWorkout(workout),
     onSuccess: () => {
@@ -199,7 +200,13 @@ function EditSavedWoModal({
             <div className="flex justify-center mt-4">
               <Button
                 className="bg-green-600 hover:bg-green-700 px-8 py-2 rounded-lg font-semibold text-white"
-                /*onClick={onStartWorkout}*/
+                onClick={() =>
+                  navigate("/start", {
+                    state: {
+                      workoutToStart: { name: workout.name, workoutExercises },
+                    },
+                  })
+                }
               >
                 START WORKOUT
               </Button>
@@ -300,6 +307,7 @@ function EditSavedWoModal({
             title="DO YOU WANT TO UPDATE THE WORKOUT?"
           />
         )}
+
         {/*Toast Notification*/}
         <Toast
           visible={toast.visible}

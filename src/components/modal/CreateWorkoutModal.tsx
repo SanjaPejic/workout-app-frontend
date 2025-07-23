@@ -14,6 +14,7 @@ import { useUserStore } from "@/constants/UserStore";
 import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
 import Toast from "../shared/Toast";
+import { useNavigate } from "react-router-dom";
 
 interface CreateWorkoutModalProps {
   exercises: Exercise[];
@@ -47,6 +48,8 @@ function CreateWorkoutModal({
         kilos: 0,
       }))
   );
+
+  const navigate = useNavigate();
 
   const [isSaveWoModalOpen, setIsSaveWoModalOpen] = useState(false);
 
@@ -190,7 +193,11 @@ function CreateWorkoutModal({
             <div className="flex justify-center mt-4">
               <Button
                 className="bg-green-600 hover:bg-green-700 px-8 py-2 rounded-lg font-semibold text-white"
-                /*onClick={onStartWorkout}*/
+                onClick={() =>
+                  navigate("/start", {
+                    state: { workoutToStart: { workoutExercises } },
+                  })
+                }
               >
                 START WORKOUT
               </Button>
