@@ -195,7 +195,9 @@ function CreateWorkoutModal({
                 className="bg-green-600 hover:bg-green-700 px-8 py-2 rounded-lg font-semibold text-white"
                 onClick={() =>
                   navigate("/start", {
-                    state: { workoutToStart: { workoutExercises } },
+                    state: {
+                      workoutToStart: { workoutExercises, injuredMuscles },
+                    },
                   })
                 }
               >

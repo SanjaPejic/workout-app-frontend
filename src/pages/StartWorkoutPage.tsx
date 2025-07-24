@@ -2,6 +2,8 @@ import ConformationModal from "@/components/modal/ConfirmationModal";
 import Stopwatch from "@/components/startWorkoutPage/Stopwatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { Exercise } from "@/types/Exercise";
+import type { Muscle } from "@/types/Muscle";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useState } from "react";
@@ -10,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 interface DataForStartWorkout {
   name?: string;
   workoutExercises: WorkoutExercise[];
+  injuredMuscles: Muscle[];
 }
 
 function StartWorkoutPage() {
@@ -33,6 +36,8 @@ function StartWorkoutPage() {
         </div>
       </div>
     );
+
+  const injuredMuscles = workoutToStart.injuredMuscles || [];
 
   const navigate = useNavigate();
   const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
@@ -76,6 +81,21 @@ function StartWorkoutPage() {
 
   const handleOnNoExit = () => {
     setIsExitConfirmOpen(false);
+  };
+
+  const hasInjuredMuscle = (exercise: Exercise) => {
+    return exercise.targetMuscles.some((targetMuscle) =>
+      injuredMuscles.some(
+        (injuredMuscle) => injuredMuscle.id === targetMuscle.muscle.id
+      )
+    );
+  };
+
+  const showInjuryWarning = (exercise: Exercise) => {
+    if (hasInjuredMuscle(exercise)) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -136,6 +156,11 @@ function StartWorkoutPage() {
                       <div className="flex items-center gap-3">
                         <span className="flex items-center gap-2 font-semibold text-gray-900">
                           {index + 1}. {wEx.exercise.name} ({wEx.sets} sets)
+                          {showInjuryWarning(wEx.exercise) && (
+                            <span className="flex justify-center items-center bg-red-500 rounded-full w-5 h-5 font-bold text-white text-xs">
+                              !
+                            </span>
+                          )}
                         </span>
                         {isCompleted && (
                           <span className="bg-green-600 px-3 py-1 rounded-md font-semibold text-white text-sm">

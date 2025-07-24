@@ -203,7 +203,11 @@ function EditSavedWoModal({
                 onClick={() =>
                   navigate("/start", {
                     state: {
-                      workoutToStart: { name: workout.name, workoutExercises },
+                      workoutToStart: {
+                        name: workout.name,
+                        workoutExercises,
+                        injuredMuscles,
+                      },
                     },
                   })
                 }
