@@ -7,6 +7,7 @@ import SavedWorkoutPage from "./pages/SavedWorkoutPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "./pages/LoginPage";
 import AppLayout from "./components/layout/appLayout";
+import StartrWorkoutPage from "./pages/StartWorkoutPage";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,8 @@ function AppContent() {
         <Route path="/generate" element={<GenerateWorkoutPage />} />
         <Route path="/saved" element={<SavedWorkoutPage />} />
       </Route>
+
+      <Route path="/start" element={<StartrWorkoutPage />} />
     </Routes>
   );
 }
