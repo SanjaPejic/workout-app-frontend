@@ -20,8 +20,9 @@ function AppContent() {
         <Route path="/create" element={<CreateWorkoutPage />} />
         <Route path="/generate" element={<GenerateWorkoutPage />} />
         <Route path="/saved" element={<SavedWorkoutPage />} />
-        <Route path="/start" element={<StartrWorkoutPage />} />
       </Route>
+
+      <Route path="/start" element={<StartrWorkoutPage />} />
     </Routes>
   );
 }
