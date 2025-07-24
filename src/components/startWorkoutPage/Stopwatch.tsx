@@ -69,7 +69,7 @@ function Stopwatch() {
           PAUSE
         </Button>
         {/*Display*/}
-        <div className="flex items-center px-3 py-2 h-full-4 font-bold text-2xl">
+        <div className="flex items-center px-3 h-full font-bold text-2xl">
           {formatTime()}
         </div>
         <Tooltip>
