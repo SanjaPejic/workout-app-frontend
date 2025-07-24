@@ -1,10 +1,11 @@
+import ConformationModal from "@/components/modal/ConfirmationModal";
 import Stopwatch from "@/components/startWorkoutPage/Stopwatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface DataForStartWorkout {
   name?: string;
@@ -33,6 +34,8 @@ function StartWorkoutPage() {
       </div>
     );
 
+  const navigate = useNavigate();
+  const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
   const [expandedExercise, setExpandedExercise] = useState<number | null>(null);
   const [completedSets, setCompletedSets] = useState<Set<string>>(new Set());
 
@@ -66,6 +69,15 @@ function StartWorkoutPage() {
     setCompletedSets(newCompleted);
   };
 
+  const handleOnYesExit = () => {
+    navigate("/create");
+    setIsExitConfirmOpen(false);
+  };
+
+  const handleOnNoExit = () => {
+    setIsExitConfirmOpen(false);
+  };
+
   return (
     <div>
       {/*Base of the page*/}
@@ -73,7 +85,7 @@ function StartWorkoutPage() {
         {/*Title and Exit Button*/}
         <div>
           <Button
-            // onClick={() => setShowExitConfirm(true)}
+            onClick={() => setIsExitConfirmOpen(true)}
             variant="outline"
             size="icon"
             className="right-6 absolute border-2 border-gray-300 rounded-lg"
@@ -206,6 +218,15 @@ function StartWorkoutPage() {
           </div>
         </div>
       </div>
+      {/*Exit Conformation Dialog*/}
+      {isExitConfirmOpen && (
+        <ConformationModal
+          isOpen={isExitConfirmOpen}
+          onYes={handleOnYesExit}
+          onNo={handleOnNoExit}
+          title="DO YOU WANT TO EXIT THE LIVE WORKOUT SESSION?"
+        />
+      )}
     </div>
   );
 }
