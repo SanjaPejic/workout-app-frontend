@@ -1,3 +1,4 @@
+import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
 import ConformationModal from "@/components/modal/ConfirmationModal";
 import Stopwatch from "@/components/startWorkoutPage/Stopwatch";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,11 @@ function StartWorkoutPage() {
   const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
   const [expandedExercise, setExpandedExercise] = useState<number | null>(null);
   const [completedSets, setCompletedSets] = useState<Set<string>>(new Set());
+
+  const activeWorkoutEx = workoutToStart.workoutExercises.find(
+    (wEx) => wEx.id === expandedExercise
+  );
+  const activeExercise = activeWorkoutEx?.exercise;
 
   const isExerciseCompleted = (wEx: WorkoutExercise) => {
     if (wEx.sets === 0) return false;
@@ -238,7 +244,13 @@ function StartWorkoutPage() {
           {/*Right Column: Exercise Card (1/3 width)*/}
           <div className="lg:col-span-1 lg:mt-[72px]">
             <div className="top-8 sticky">
-              Expanded Exercise Image or an Exercise Card
+              {activeExercise ? (
+                <ExerciseCard exercise={activeExercise} isStartWorkout />
+              ) : (
+                <p className="text-gray-500 text-center">
+                  Select an exercise to see details.
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -6,10 +6,11 @@ import type { Muscle } from "@/types/Muscle";
 
 interface ExerciseCardProps {
   exercise: Exercise;
-  onToggle: () => void;
-  isAdded: boolean;
-  injuredMuscles: Muscle[];
-  onExerciseClick: () => void;
+  onToggle?: () => void;
+  isAdded?: boolean;
+  injuredMuscles?: Muscle[];
+  onExerciseClick?: () => void;
+  isStartWorkout?: boolean;
 }
 
 function ExerciseCard({
@@ -18,17 +19,20 @@ function ExerciseCard({
   isAdded,
   injuredMuscles,
   onExerciseClick,
+  isStartWorkout = false,
 }: ExerciseCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   //Check for injured muscles
-  const hasInjuredMuscle = exercise.targetMuscles.some((tm) =>
-    injuredMuscles.some((injuredMuscle) => injuredMuscle.id === tm.muscle.id)
-  );
+  const hasInjuredMuscle = exercise.targetMuscles.some((tm) => {
+    if (!injuredMuscles) return;
+
+    injuredMuscles.some((injuredMuscle) => injuredMuscle.id === tm.muscle.id!);
+  });
 
   return (
     <div
-      className="group relative shadow-lg hover:shadow-xl rounded-2xl w-full h-64 overflow-hidden transition-all duration-300 cursor-pointer"
+      className={`group relative shadow-lg hover:shadow-xl rounded-2xl w-full h-64 overflow-hidden transition-all duration-300 ${isStartWorkout ? "" : "cursor-pointer"}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onExerciseClick}
@@ -64,7 +68,7 @@ function ExerciseCard({
                   <span
                     key={index}
                     className={`px-3 py-1 rounded-full text-sm font-medium shadow-md transform transition-all duration-300 ${
-                      injuredMuscles.some(
+                      injuredMuscles!.some(
                         (injured) => injured.id === targetMuscle.muscle.id
                       )
                         ? "bg-cyan-500 text-white outline-solid outline-yellow-200"
@@ -117,19 +121,25 @@ function ExerciseCard({
       </div>
 
       {/*Add/Remove Button*/}
-      <Button
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle();
-        }}
-        className={`absolute top-3 right-3 w-8 h-8 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border-2 z-10 ${
-          isAdded
-            ? "bg-green-500 hover:bg-green-600 text-white border-green-400"
-            : "bg-white/90 hover:bg-white text-gray-900 border-white/50"
-        }`}
-      >
-        {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-      </Button>
+      {!isStartWorkout && onToggle && (
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }}
+          className={`absolute top-3 right-3 w-8 h-8 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border-2 z-10 ${
+            isAdded
+              ? "bg-green-500 hover:bg-green-600 text-white border-green-400"
+              : "bg-white/90 hover:bg-white text-gray-900 border-white/50"
+          }`}
+        >
+          {isAdded ? (
+            <Check className="w-4 h-4" />
+          ) : (
+            <Plus className="w-4 h-4" />
+          )}
+        </Button>
+      )}
     </div>
   );
 }
