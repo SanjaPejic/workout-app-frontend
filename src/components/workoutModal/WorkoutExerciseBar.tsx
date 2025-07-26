@@ -17,7 +17,7 @@ interface WorkoutExerciseBarProps {
   onDrop: (e: React.DragEvent) => void;
 }
 
-const WorkoutExerciseBar = ({
+function WorkoutExerciseBar({
   exerciseName,
   hasInjuredMuscle = false,
   sets,
@@ -30,7 +30,7 @@ const WorkoutExerciseBar = ({
   onDragStart,
   onDragOver,
   onDrop,
-}: WorkoutExerciseBarProps) => {
+}: WorkoutExerciseBarProps) {
   return (
     <div className="flex-1">
       {/*Individual Exercise Warnings*/}
@@ -111,6 +111,6 @@ const WorkoutExerciseBar = ({
       </div>
     </div>
   );
-};
+}
 
 export default WorkoutExerciseBar;

@@ -19,18 +19,18 @@ function ExerciseModal({ exercise, onClose }: ExerciseModalProps) {
             onClick={onClose}
             variant="ghost"
             size="icon"
-            className="top-4 right-4 z-10 absolute bg-white/90 hover:bg-white rounded-full"
+            className="top-4 right-4 z-10 absolute bg-white/90 hover:bg-white border border-gray-300 rounded-full"
           >
             <X className="w-4 h-4" />
           </Button>
           {/*Title*/}
-          <div className="p-6 pb-4">
-            <DialogTitle asChild>
-              <h2 className="font-bold text-gray-900 text-2xl text-center">
-                {exercise.name}
-              </h2>
-            </DialogTitle>
-          </div>
+
+          <DialogTitle asChild className="text-2xl">
+            <div className="p-6 pb-4 font-bold text-gray-900 text-center">
+              {exercise.name}
+            </div>
+          </DialogTitle>
+
           {/*Exercise Details*/}
           <div className="gap-6 grid grid-cols-1 lg:grid-cols-2 p-6 pt-0">
             {/*Left Side: video + text-description*/}
@@ -73,7 +73,10 @@ function ExerciseModal({ exercise, onClose }: ExerciseModalProps) {
             {/*Right side: body avatars + target muscle percentages*/}
             <div className="space-y-4">
               <div className="flex justify-center gap-8">
-                <AvatarBodies targetMuscles={exercise.targetMuscles} />
+                <AvatarBodies
+                  targetMuscles={exercise.targetMuscles}
+                  size={"medium"}
+                />
               </div>
               {/* Muscle Percentages */}
               <div className="space-y-3">

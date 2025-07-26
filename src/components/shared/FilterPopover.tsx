@@ -39,23 +39,6 @@ function FilterPopover({
     queryFn: getMuscles,
   });
 
-  // send get api request to backend
-  // useEffect(() => {
-  //   fetch("http://localhost:8080/api/muscles")
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setMusclesData(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Failed to fetch muscles:", error);
-  //     });
-  // }, []);
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredMuscles = musclesData?.filter((muscle) =>
