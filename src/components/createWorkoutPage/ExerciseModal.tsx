@@ -2,6 +2,7 @@ import type { Exercise } from "@/types/Exercise";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
+import AvatarBodies from "../shared/AvatarBodies";
 
 interface ExerciseModalProps {
   exercise: Exercise;
@@ -72,10 +73,7 @@ function ExerciseModal({ exercise, onClose }: ExerciseModalProps) {
             {/*Right side: body avatars + target muscle percentages*/}
             <div className="space-y-4">
               <div className="flex justify-center gap-8">
-                {/* Front Body */}
-                <div className="text-center">Avatar body front</div>
-                {/* Back Body */}
-                <div className="text-center">Avatar body back</div>
+                <AvatarBodies targetMuscles={exercise.targetMuscles} />
               </div>
               {/* Muscle Percentages */}
               <div className="space-y-3">

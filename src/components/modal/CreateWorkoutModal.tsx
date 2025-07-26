@@ -15,6 +15,7 @@ import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
 import Toast from "../shared/Toast";
 import { useNavigate } from "react-router-dom";
+import AvatarBodies from "../shared/AvatarBodies";
 
 interface CreateWorkoutModalProps {
   exercises: Exercise[];
@@ -239,8 +240,11 @@ function CreateWorkoutModal({
             <div className="space-y-4">
               {/*Avatar Body*/}
               <div className="flex justify-center gap-8">
-                <div className="text-center">Front body</div>
-                <div className="text-center">Back body</div>
+                <AvatarBodies
+                  targetMuscles={exercises.flatMap(
+                    (exercise) => exercise.targetMuscles
+                  )}
+                />
               </div>
               {/*Combined Muscle Perecentages*/}
               <div className="space-y-3">
