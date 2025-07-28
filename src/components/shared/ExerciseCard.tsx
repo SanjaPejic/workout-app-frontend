@@ -8,7 +8,7 @@ interface ExerciseCardProps {
   exercise: Exercise;
   onToggle?: () => void;
   isAdded?: boolean;
-  injuredMuscles?: Muscle[];
+  injuredMuscles: Muscle[];
   onExerciseClick?: () => void;
   isStartWorkout?: boolean;
 }
@@ -24,11 +24,9 @@ function ExerciseCard({
   const [isHovered, setIsHovered] = useState(false);
 
   //Check for injured muscles
-  const hasInjuredMuscle = exercise.targetMuscles.some((tm) => {
-    if (!injuredMuscles) return;
-
-    injuredMuscles.some((injuredMuscle) => injuredMuscle.id === tm.muscle.id!);
-  });
+  const hasInjuredMuscle = exercise.targetMuscles.some((tm) =>
+    injuredMuscles.some((injuredMuscle) => injuredMuscle.id === tm.muscle.id)
+  );
 
   return (
     <div

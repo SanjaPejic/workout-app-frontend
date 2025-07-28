@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { getExercises, getUserInjuries } from "@/api/client-service";
 import type { Exercise } from "@/types/Exercise";
-import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
+import ExerciseCard from "@/components/shared/ExerciseCard";
 import Toast from "@/components/shared/Toast";
 import FilterPopover from "@/components/shared/FilterPopover";
 import FilterButton from "@/components/shared/FilterButton";

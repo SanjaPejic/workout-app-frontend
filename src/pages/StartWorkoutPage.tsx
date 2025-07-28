@@ -1,4 +1,4 @@
-import ExerciseCard from "@/components/createWorkoutPage/ExerciseCard";
+import ExerciseCard from "@/components/shared/ExerciseCard";
 import ConformationModal from "@/components/modal/ConfirmationModal";
 import Stopwatch from "@/components/startWorkoutPage/Stopwatch";
 import { Button } from "@/components/ui/button";
@@ -245,7 +245,11 @@ function StartWorkoutPage() {
           <div className="lg:col-span-1 lg:mt-[72px]">
             <div className="top-8 sticky">
               {activeExercise ? (
-                <ExerciseCard exercise={activeExercise} isStartWorkout />
+                <ExerciseCard
+                  exercise={activeExercise}
+                  isStartWorkout
+                  injuredMuscles={injuredMuscles}
+                />
               ) : (
                 <p className="text-gray-500 text-center">
                   Select an exercise to see details.
