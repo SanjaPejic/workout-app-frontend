@@ -45,9 +45,9 @@ function CreateWorkoutModal({
       exercises.map((ex) => ({
         id: ex.id, // dummy value
         exercise: ex,
-        sets: 0,
-        reps: 0,
-        kilos: 0,
+        sets: undefined,
+        reps: undefined,
+        kilos: undefined,
       }))
   );
 

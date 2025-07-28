@@ -5,9 +5,9 @@ import { AlertTriangle, GripVertical, Trash2 } from "lucide-react";
 interface WorkoutExerciseBarProps {
   exerciseName: string;
   hasInjuredMuscle?: boolean;
-  sets: number;
-  reps: number;
-  kilos: number;
+  sets: number | undefined;
+  reps: number | undefined;
+  kilos: number | undefined;
   onSetsChange: (newSets: number) => void;
   onRepsChange: (newReps: number) => void;
   onKilosChange: (newKilos: number) => void;
@@ -66,7 +66,9 @@ function WorkoutExerciseBar({
               type="number"
               name="sets"
               className="w-16 h-8 text-center"
-              value={sets ?? ""}
+              value={sets}
+              placeholder={"0"}
+              min={0}
               onChange={(e) =>
                 onSetsChange?.(e.target.value === "" ? 0 : +e.target.value)
               }
@@ -78,7 +80,9 @@ function WorkoutExerciseBar({
               type="number"
               name="reps"
               className="w-16 h-8 text-center"
-              value={reps ?? ""}
+              value={reps}
+              placeholder={"0"}
+              min={0}
               onChange={(e) =>
                 onRepsChange?.(e.target.value === "" ? 0 : +e.target.value)
               }
@@ -90,7 +94,9 @@ function WorkoutExerciseBar({
               type="number"
               name="kilos"
               className="w-16 h-8 text-center"
-              value={kilos ?? ""}
+              value={kilos}
+              placeholder={"0"}
+              min={0}
               onChange={(e) =>
                 onKilosChange?.(e.target.value === "" ? 0 : +e.target.value)
               }
