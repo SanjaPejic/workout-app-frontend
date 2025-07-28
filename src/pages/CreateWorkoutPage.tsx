@@ -45,8 +45,6 @@ function CreateWorkoutPage() {
 
   const targetMuscNames = appliedTargetMuscles.map((muscle) => muscle.name);
 
-  console.log(targetMuscNames);
-
   const { data: exercisesData, isLoading: isExercisesDataLoading } = useQuery<
     PageableResponse<Exercise>
   >({

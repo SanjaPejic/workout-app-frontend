@@ -169,7 +169,9 @@ function EditSavedWoModal({
   const workoutMuscPercentages = calculateWoMuscPercentages(
     workoutExercises.flatMap((we) => we.exercise)
   );
-
+  const canStartWorkout = workoutExercises.every(
+    (we) => we.sets && we.sets > 0
+  );
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="[&>button]:hidden p-0 !max-w-6xl !max-h-[90vh] overflow-y-auto">
@@ -203,9 +205,17 @@ function EditSavedWoModal({
               </div>
             )}
             {/*Start Workout Button */}
-            <div className="flex justify-center mt-4">
+            <div className="group relative flex justify-center mt-4">
+              {/* Tooltip only visible when button is disabled and hovered */}
+              {!canStartWorkout && (
+                <div className="-top-10 left-1/2 z-30 absolute bg-gray-600/80 opacity-0 group-hover:opacity-100 shadow-lg px-4 py-2 rounded-xl text-white text-sm transition-all -translate-x-1/2 duration-200 pointer-events-none">
+                  Please set <span className="font-bold">sets</span> for all
+                  exercises!
+                </div>
+              )}
               <Button
                 className="bg-green-600 hover:bg-green-700 px-8 py-2 rounded-lg font-semibold text-white"
+                disabled={!canStartWorkout}
                 onClick={() =>
                   navigate("/start", {
                     state: {
