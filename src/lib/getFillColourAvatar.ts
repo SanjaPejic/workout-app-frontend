@@ -39,7 +39,7 @@ const darkColour = "#1254a1";
   const max = Math.max(...Object.values(musclePercentages));
   if (max === 0) return defaultColour; // avoid divide by zero
 
-  // For each part, return colour based on *relative* intensity
+  // For each part, return colour based on relative intensity
   // (if multiple match, just use first match as before)
   for (let name of avatarBodyParts) {
     const pct = musclePercentages[name];

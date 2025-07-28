@@ -1,6 +1,6 @@
 import type { Muscle } from "@/types/Muscle";
 import { PopoverContent } from "../ui/popover";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { Input } from "../ui/input";
