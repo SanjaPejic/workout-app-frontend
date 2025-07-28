@@ -16,7 +16,7 @@ import type { Workout } from "@/types/Workout";
 import Toast from "../shared/Toast";
 import { useNavigate } from "react-router-dom";
 import AvatarBodies from "../shared/AvatarBodies";
-import calculateWoMuscPercentages from "@/lib/calculateWoMuscPercentages";
+import calculateWoMuscPercentages from "@/util/calculateWoMuscPercentages";
 
 interface CreateWorkoutModalProps {
   exercises: Exercise[];
