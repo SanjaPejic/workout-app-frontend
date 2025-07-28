@@ -7,8 +7,9 @@ import type { Exercise } from "@/types/Exercise";
 import type { Muscle } from "@/types/Muscle";
 import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import MotivationModal from "@/components/workoutModal/MotivationalModal";
 
 interface DataForStartWorkout {
   name?: string;
@@ -49,6 +50,8 @@ function StartWorkoutPage() {
     (wEx) => wEx.id === expandedExercise
   );
   const activeExercise = activeWorkoutEx?.exercise;
+
+  const [showMotivation, setShowMotivation] = useState(false);
 
   const isExerciseCompleted = (wEx: WorkoutExercise) => {
     if (wEx.sets === 0) return false;
@@ -103,6 +106,15 @@ function StartWorkoutPage() {
     }
     return false;
   };
+
+  useEffect(() => {
+    if (
+      workoutToStart.workoutExercises.length > 0 &&
+      workoutToStart.workoutExercises.every(isExerciseCompleted)
+    ) {
+      setShowMotivation(true);
+    }
+  }, [completedSets, workoutToStart.workoutExercises]);
 
   return (
     <div>
@@ -266,6 +278,14 @@ function StartWorkoutPage() {
           onYes={handleOnYesExit}
           onNo={handleOnNoExit}
           title="DO YOU WANT TO EXIT THE LIVE WORKOUT SESSION?"
+        />
+      )}
+      {showMotivation && (
+        <MotivationModal
+          onClose={() => {
+            setShowMotivation(false);
+            navigate("/create");
+          }}
         />
       )}
     </div>
