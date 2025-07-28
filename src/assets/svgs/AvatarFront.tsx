@@ -1,5 +1,5 @@
 import { bodyPartsMap } from "@/constants/BodyParts";
-import getFillColour from "@/lib/getFillColourAvatar";
+import getFillColour from "@/util/getFillColourAvatar";
 
 interface AvatarFrontProps {
   musclePercentages: { [muscleName: string]: number };
