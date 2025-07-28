@@ -14,6 +14,8 @@ import { QueryKeys } from "@/api/constants/query-keys";
 import type { Workout } from "@/types/Workout";
 import Toast from "../shared/Toast";
 import { useNavigate } from "react-router-dom";
+import AvatarBodies from "../shared/AvatarBodies";
+import calculateWoMuscPercentages from "@/lib/calculateWoMuscPercentages";
 
 interface EditSavedWoModalProps {
   workout: Workout;
@@ -164,6 +166,10 @@ function EditSavedWoModal({
     updateWorkoutMutation.mutate({ workout: updatedWorkout });
   };
 
+  const workoutMuscPercentages = calculateWoMuscPercentages(
+    workoutExercises.flatMap((we) => we.exercise)
+  );
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="[&>button]:hidden p-0 !max-w-6xl !max-h-[90vh] overflow-y-auto">
@@ -250,27 +256,33 @@ function EditSavedWoModal({
             <div className="space-y-4">
               {/*Avatar Body*/}
               <div className="flex justify-center gap-8">
-                <div className="text-center">Front body</div>
-                <div className="text-center">Back body</div>
+                <AvatarBodies
+                  targetMuscles={workoutExercises.flatMap(
+                    (we) => we.exercise.targetMuscles
+                  )}
+                  size="medium"
+                />
               </div>
-              {/*Combined Muscle Perecentages*/}
+              {/*Combined Target Muscles Perecentages*/}
               <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium text-gray-900 text-sm uppercase">
-                      misic
-                    </span>
-                    <span className="text-gray-600 text-sm">
-                      !!!!!!procenat% (need to fix)
-                    </span>
+                {workoutMuscPercentages.map((targetMuscle) => (
+                  <div key={`${targetMuscle.name}-${targetMuscle.percentage}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-medium text-gray-900 text-sm uppercase">
+                        {targetMuscle.name}
+                      </span>
+                      <span className="text-gray-600 text-sm">
+                        {targetMuscle.percentage}%
+                      </span>
+                    </div>
+                    <div className="bg-gray-200 rounded-full w-full h-2">
+                      <div
+                        className="bg-gray-600 rounded-full h-2 transition-all duration-300"
+                        style={{ width: `${targetMuscle.percentage}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="bg-gray-200 rounded-full w-full h-2">
-                    <div
-                      className="bg-slate-600 rounded-full h-2 transition-all duration-300"
-                      style={{ width: `${50}% (need to fix)` }}
-                    />
-                  </div>
-                </div>
+                ))}
               </div>
               {/*Buttons: Download PDF + Save/Update*/}
               <div className="flex gap-4 pt-4">

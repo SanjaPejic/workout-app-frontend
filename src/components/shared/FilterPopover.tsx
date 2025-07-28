@@ -1,6 +1,6 @@
 import type { Muscle } from "@/types/Muscle";
 import { PopoverContent } from "../ui/popover";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { Input } from "../ui/input";
@@ -38,23 +38,6 @@ function FilterPopover({
     queryKey: [QueryKeys.MUSCLES],
     queryFn: getMuscles,
   });
-
-  // send get api request to backend
-  // useEffect(() => {
-  //   fetch("http://localhost:8080/api/muscles")
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setMusclesData(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Failed to fetch muscles:", error);
-  //     });
-  // }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
 
