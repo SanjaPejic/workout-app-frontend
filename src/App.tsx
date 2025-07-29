@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import StartrWorkoutPage from "./pages/StartWorkoutPage";
 import AppLayout from "./components/layout/AppLayout";
 import RequireAuth from "./components/layout/RequireAuth";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,9 @@ function AppContent() {
         </Route>
         <Route path="/start" element={<StartrWorkoutPage />} />
       </Route>
+
+      {/* Catch-all route for invalid URLs */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

@@ -27,7 +27,7 @@ function UserMenu() {
   };
 
   const onLogout = () => {
-    clearUserStore;
+    clearUserStore();
     navigate("/");
   };
   return (
