@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "./pages/LoginPage";
 
 import StartrWorkoutPage from "./pages/StartWorkoutPage";
-import AppLayout from "./components/layout/appLayout";
+import AppLayout from "./components/layout/AppLayout";
 import RequireAuth from "./components/layout/RequireAuth";
 
 const queryClient = new QueryClient();

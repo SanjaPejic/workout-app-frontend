@@ -53,8 +53,8 @@ function StartWorkoutPage() {
 
   const [showMotivation, setShowMotivation] = useState(false);
 
-  const isExerciseCompleted = (wEx: WorkoutExercise) => {
-    if (wEx.sets === 0) return false;
+  const isExerciseCompleted = (wEx: WorkoutExercise): boolean => {
+    if (!wEx.sets || wEx.sets === 0) return false;
 
     for (let i = 1; i <= wEx.sets; i++) {
       if (!completedSets.has(`${wEx.id}-${i}`)) {
@@ -101,10 +101,7 @@ function StartWorkoutPage() {
   };
 
   const showInjuryWarning = (exercise: Exercise) => {
-    if (hasInjuredMuscle(exercise)) {
-      return true;
-    }
-    return false;
+    return hasInjuredMuscle(exercise);
   };
 
   useEffect(() => {
@@ -194,7 +191,7 @@ function StartWorkoutPage() {
                     </div>
 
                     {/*Exercise Volume (exercise sets, reps, kilos)*/}
-                    {isExpanded && wEx.sets > 0 && (
+                    {isExpanded && wEx.sets && wEx.sets > 0 && (
                       <div className="space-y-2 px-4 pb-4">
                         {/*Column Headers*/}
                         <div className="flex items-center px-3 py-2">

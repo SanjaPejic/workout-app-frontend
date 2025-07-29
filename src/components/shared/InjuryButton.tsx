@@ -9,6 +9,15 @@ import { getUserInjuries, updateUserInjuries } from "@/api/client-service";
 import { QueryKeys } from "@/api/constants/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+interface UserInjury {
+  id: number;
+  muscle: Muscle;
+  user: {
+    id: number;
+    username: string;
+  };
+}
+
 interface InjuryButtonProps {
   isInjuriesOpen: boolean;
   setIsInjuriesOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,9 +56,11 @@ function InjuryButton({
         injuries.map((muscle) => ({ muscle }))
       ),
     onSuccess: (response) => {
-      setAppliedInjuredMuscles(response.map((injury: any) => injury.muscle));
+      setAppliedInjuredMuscles(
+        response.map((injury: UserInjury) => injury.muscle)
+      );
       queryClient.invalidateQueries({ queryKey: [QueryKeys.INJURIES, userId] });
-      setToast({ visible: true, message: "Applyed injuries" });
+      setToast({ visible: true, message: "Applied injuries" });
     },
     onError: (error: any) => {
       setToast({
