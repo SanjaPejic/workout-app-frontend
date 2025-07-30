@@ -1,5 +1,5 @@
 import ExerciseCard from "@/components/shared/ExerciseCard";
-import ConformationModal from "@/components/modal/ConfirmationModal";
+import ConfirmationModal from "@/components/modal/ConfirmationModal";
 import Stopwatch from "@/components/startWorkoutPage/Stopwatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,7 +9,7 @@ import type { WorkoutExercise } from "@/types/WorkoutExercise";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import MotivationModal from "@/components/workoutModal/MotivationalModal";
+import MotivationModal from "@/components/modal/MotivationalModal";
 
 interface DataForStartWorkout {
   name?: string;
@@ -270,7 +270,7 @@ function StartWorkoutPage() {
       </div>
       {/*Exit Conformation Dialog*/}
       {isExitConfirmOpen && (
-        <ConformationModal
+        <ConfirmationModal
           isOpen={isExitConfirmOpen}
           onYes={handleOnYesExit}
           onNo={handleOnNoExit}
