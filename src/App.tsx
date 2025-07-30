@@ -10,7 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import StartrWorkoutPage from "./pages/StartWorkoutPage";
 import RequireAuth from "./components/layout/RequireAuth";
 import NotFoundPage from "./pages/NotFoundPage";
-import AppLayout from "./components/layout/AppLayout";
+import HeaderLayout from "./components/layout/HeaderLayout";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +20,7 @@ function AppContent() {
       <Route path="/" element={<LoginPage />} />
 
       <Route element={<RequireAuth />}>
-        <Route element={<AppLayout />}>
+        <Route element={<HeaderLayout />}>
           <Route path="/create" element={<CreateWorkoutPage />} />
           <Route path="/generate" element={<GenerateWorkoutPage />} />
           <Route path="/saved" element={<SavedWorkoutPage />} />
