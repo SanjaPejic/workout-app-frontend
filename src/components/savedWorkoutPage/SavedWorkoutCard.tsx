@@ -25,11 +25,7 @@ function SavedWorkoutCard({ workout, onDelete, onOpen }: SavedWoCardProps) {
             <h3 className="font-bold text-gray-900 text-xl truncate">
               {workout.name}
             </h3>
-            {/* {hasInjuryConflict(workout.exercises) && (
-              <div className="flex flex-shrink-0 justify-center items-center bg-red-500 rounded-full w-6 h-6 text-white">
-                <AlertTriangle className="w-4 h-4" />
-              </div>
-            )} */}
+            {/* Missing --> small red injury alert */}
           </div>
           <Button
             onClick={() => onDelete(workout.id)}
@@ -57,22 +53,7 @@ function SavedWorkoutCard({ workout, onDelete, onOpen }: SavedWoCardProps) {
             Muscles targeted
           </h4>
           <div className="space-y-2">
-            {/* {musclePercentages.map(([muscle, percentage]) => (
-              <div key={muscle} className="space-y-1">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-900 text-xs uppercase">
-                    {muscle}
-                  </span>
-                  <span className="text-gray-600 text-xs">{percentage}%</span>
-                </div>
-                <div className="bg-gray-200 rounded-full w-full h-2">
-                  <div
-                    className="bg-slate-600 rounded-full h-2 transition-all duration-300"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))} */}
+            {/* Missing --> list of targeted muscles */}
           </div>
         </div>
 

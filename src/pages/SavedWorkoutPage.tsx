@@ -34,7 +34,6 @@ function SavedWorkoutPage() {
   >({
     queryKey: [QueryKeys.WORKOUTS, userId],
     queryFn: () => getWorkouts(userId!),
-    //enabled: !!userId,
   });
 
   const handleOpenConformationModal = (workoutId: number) => {

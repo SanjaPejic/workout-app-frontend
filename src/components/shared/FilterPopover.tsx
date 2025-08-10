@@ -30,8 +30,6 @@ function FilterPopover({
   onClear,
   variant = "default",
 }: FilterPopoverProps) {
-  //const [musclesData, setMusclesData] = useState<Muscle[]>([]);
-
   const { data: musclesData, isLoading: isMusclesDataLoading } = useQuery<
     Muscle[]
   >({
