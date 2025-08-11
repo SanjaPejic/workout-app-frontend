@@ -3,14 +3,14 @@ import AvatarFront from "@/assets/svgs/AvatarFront";
 import type { TargetMuscle } from "@/types/TargetMuscle";
 
 interface AvatarBodiesProps {
-  targetMuscles: TargetMuscle[];
+  targetMuscles: Partial<TargetMuscle>[];
   size?: "big" | "medium" | "small";
 }
 
 function AvatarBodies({ targetMuscles, size = "small" }: AvatarBodiesProps) {
   // Build a map of muscle name to percentage
   const percentageMap = Object.fromEntries(
-    targetMuscles.map((tm) => [tm.muscle.name, tm.percentage])
+    targetMuscles.map((tm) => [tm.muscle?.name, tm.percentage])
   );
 
   let width: number | undefined;

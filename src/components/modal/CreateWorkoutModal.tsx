@@ -255,9 +255,10 @@ function CreateWorkoutModal({
               {/*Avatar Body*/}
               <div className="flex justify-center gap-8">
                 <AvatarBodies
-                  targetMuscles={exercises.flatMap(
-                    (exercise) => exercise.targetMuscles
-                  )}
+                  targetMuscles={workoutMuscPercentages.map((muscle) => ({
+                    muscle: { name: muscle.name } as Muscle,
+                    percentage: muscle.percentage,
+                  }))}
                   size="medium"
                 />
               </div>
