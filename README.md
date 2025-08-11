@@ -1,26 +1,57 @@
-# Workout App
+# Workout App - Frontend
 
 A modern React-based workout application that helps users create, save, manage, and track their strength workout routines. Built with TypeScript, Tailwind CSS, and a component-based architecture.
 
-## Tech Stack
+## Live Application
 
-- **Frontend**: React 19.1 with TypeScript
-- **Styling**: Tailwind CSS 4.1 with custom components
-- **State Management**: Zustand for global state
-- **Data Fetching**: TanStack Query (React Query) for server state
-- **Routing**: React Router DOM
-- **UI Components**: Radix UI primitives with custom styling
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Build Tool**: Vite
-- **Deployment**: Vercel
+The fully deployed application, Workout Blocks, is available at: https://workout-app-pink.vercel.app/
+
+## Frontend Source Code
+
+The repository is available on GitHub at: https://github.com/SanjaPejic/workout-app-frontend
+
+# Technology Stack
+
+## Frontend Framework
+
+- **React** `19.1.0`: Latest version
+- **TypeScript** `5.8.3`: Static type checking for enhanced code quality
+- **Vite** `6.3.5`: Fast build tool and development server
+
+## State Management & Data Fetching
+
+- **Zustand** `5.0.6`: Lightweight state management for user data
+- **TanStack Query** `5.81.5`: Powerful data fetching and caching solution
+- **Axios** `1.10.0`: HTTP client for API communication
+
+## UI Components & Styling
+
+- **Shadcn/UI Components**: Custom UI components built on top of Radix UI primitives with Tailwind CSS styling
+- **Tailwind CSS** `4.1.10`: Utility-first CSS framework
+- **Radix UI**: Accessible, unstyled UI primitives
+- **Framer Motion** `12.23.11`: Smooth animations and transitions
+- **Lucide React** `0.515.0`: Universally understood icons
+
+## Routing & Navigation
+
+- **React Router DOM** `7.6.2`: Client-side routing with protected routes
+
+## Development Tools
+
+- **ESLint** `9.25.0`: Code linting and quality enforcement
+- **Prettier** `3.5.3`: Code formatting
+- **TypeScript ESLint** `8.30.1`: TypeScript-specific linting rules
+
+## Deployment
+
+- **Vercel**
 
 ## Local Setup
 
 ### Prerequisites
 
-- Node.js (version 18 or higher)
-- npm or yarn package manager
+- _Node.js_ (version 18 or higher)
+- _npm_ package manager
 
 ### Installation
 
@@ -28,7 +59,7 @@ A modern React-based workout application that helps users create, save, manage, 
 
 ```bash
 git clone https://github.com/SanjaPejic/workout-app-frontend
-cd workout-app
+cd workout-app-frontend
 ```
 
 2. Install dependencies:
@@ -49,7 +80,7 @@ npm run dev
 
 ```
 public/
-└── logo.png                        # Workout Block logo picture
+└── logo.png                        # Workout Blocks logo picture
 
 src/
 ├── api/                            # API client and service
@@ -76,7 +107,7 @@ src/
 └── vite-env.d.ts                   # Vite-TypeScript type declarations
 ```
 
-## License
+# License
 
 This project was developed as part of my Master’s dissertation and is not licensed for public use.
 
