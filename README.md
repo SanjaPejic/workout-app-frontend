@@ -12,7 +12,7 @@ The repository is available on GitHub at: https://github.com/SanjaPejic/workout-
 
 # Technology Stack
 
-## Frontend Framework
+## Core Technologies
 
 - **React** `19.1.0`: Latest version
 - **TypeScript** `5.8.3`: Static type checking for enhanced code quality
