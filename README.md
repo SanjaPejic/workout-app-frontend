@@ -4,7 +4,7 @@ A modern React-based workout application that helps users create, save, manage, 
 
 ## Live Application
 
-The fully deployed application, Workout Blocks, is available at: https://workout-app-pink.vercel.app/
+Workout Blocks was deployed on Vercel (frontend) and AWS (backend and database). The AWS free trial period has expired, so the live deployment is no longer available. A demo video is provided to showcase the application in operation: https://youtu.be/3DXnyEJHyLc
 
 ## Frontend Source Code
 
